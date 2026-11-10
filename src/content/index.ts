@@ -7,3 +7,4 @@ export { CONFIG, offsetFor, validateConfig } from './config';
 export { TREES, getTree, validateTrees } from './trees';
 export {fillText} from './placeholders';
 export type {PlaceholderValue} from './placeholders';
+export { resolveItem } from './resolve';

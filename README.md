@@ -4,7 +4,6 @@
 
 A prototype of a tutor-style, pre-lecture app for COS 212 (Data Structures and Algorithms) students. It teaches **Binary Search Trees (BSTs)** to students who have never seen them, so they arrive at the lecture with the basics in place. The app ends each lesson with a low-stakes assessment that adds scaffolding when a student is struggling.
 
-
 ## Scope
 
 | | |
@@ -107,15 +106,34 @@ The step builders in `src/engine/steps/` turn an operation into a list of frames
 |---|---|---|---|
 | 12 | Step and highlight types, pseudocode, search and insert steps | `steps/searchSteps.ts`, `steps/insertSteps.ts` | Done |
 | 13 | Build, minimum and maximum steps | `steps/buildSteps.ts`, `steps/extremeSteps.ts` | Done |
-| 14 | Traversal steps | `steps/traversalSteps.ts` | Done    |
+| 14 | Traversal steps and the marker walk | `steps/traversalSteps.ts` | Done |
 | 15 | Delete steps | `steps/deleteSteps.ts` | Done |
 
-The content format and the retake resolver come after the steps.
+## Lesson content
+
+The lesson and test content, plus the resolver that turns it into ready-to-show questions. The lessons and assessment screens import from `src/content/index.ts`. The JSON lives in `src/content/data/`.
+
+The JSON stores each question's **task** ("search T for 65"), never its answer. The resolver asks the engine for the answer, so answers can't be mistyped, and retakes with new keys stay correct automatically.
+
+- **`config.json`**: the pass mark, the retry band, the hint rungs, whether an answer counts after the worked solution, the Lesson 5 delete-case rule, the retake offsets and the key range. It is checked on load, so a typo fails the tests.
+- **`trees.json`**: the named lesson trees, either `insert` (a list of keys) or `shape` (drawn exactly, for the invalid trees). Each tree is checked to stay within 1–99 on every retake.
+- **Keys in text** are written `{50}`, so a retake shifts them. Plain numbers ("3 comparisons") are left alone, and values worked out by the resolver are written `{path}`.
+- **A lesson item** names a tree and a task (`ask`), such as `{ "kind": "searchPath", "key": 20 }`, plus its prompt, two hints and explanation. `resolveItem(item, lesson, retake)` builds the question: the tree with the retake's keys, the answer parts, the rung-2 highlights and the worked solution. An item can write its own `parts` instead of the task's defaults, and a click answer can name a worked-out value such as `"path"`.
+- **Rung-2 highlights** are a preset (`path`, `otherHalf`, `emptySpot`, `longestPath`) or written out with retake-0 keys.
+
+| # | Feature | File | Status |
+|---|---|---|---|
+| 16 | Settings, trees and placeholders | `config.ts`, `trees.ts`, `placeholders.ts` | Done |
+| 17 | The resolver, with Lesson 2's question kinds | `resolve.ts` | Done |
+| 18 | Answer checking | `check.ts` | Next |
+| 19 | Lesson 2 in full, and the content checks | `data/lesson2.json` | |
+| 20–24 | Lessons 1, 3, 4, 5 and the final test | `data/*.json` | |
+| 25 | The content decisions, and how to change each one | `docs/` | |
 
 ### How each feature is built
 
-1. Create a branch: `git switch -c engine/02-insert`.
-2. Write the tests in `tests/engine/<feature>.test.ts`, using the lesson plan's answers. Run them and watch them fail.
+1. Create a branch
+2. Write the tests in `tests/engine/` or `tests/content/`, using the lesson plan's answers. Run them and watch them fail.
 3. Commit the failing tests: `test(engine): add insert and build tests`.
 4. Write the code until the tests pass. Commit: `feat(engine): implement insert and build`.
 5. Tidy the code with the tests still passing. Commit: `refactor(engine): ...` if anything changed.
