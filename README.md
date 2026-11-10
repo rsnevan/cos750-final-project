@@ -108,6 +108,20 @@ Animation steps, the content format and the retake resolver come after the engin
 5. Tidy the code with the tests still passing. Commit: `refactor(engine): ...` if anything changed.
 6. Run `npm run check`, open a pull request and merge it.
 
+## Assessment logic
+
+The rules behind the end-of-lesson activities and the final test: pure TypeScript with no screens, storage or network, built the same way as the engine (tests first). Screens import it from `src/assessment/index.ts`. Work happens on the `nevan/assessment` branch.
+
+| # | Feature | File | Status |
+|---|---|---|---|
+| 1 | Settings: pass mark 0.8, middle band 0.6, 3 hint rungs, final test bands | `config.ts` | Done |
+| 2 | Hint ladder: nudge, highlight, worked solution; an item is scored only if solved before the solution appears | `hints.ts` | Done |
+| 3 | Activity bands (pass, mid, low), the Lesson 5 one-per-case rule, merging retries, final test descriptor and per-outcome status | `scoring.ts` | Done |
+| 4 | Progress: lesson and final test unlocking, badges | `progress.ts` | In progress |
+| 5 | Answer checking for the four question types | `answers.ts` | To do (tree answers need the engine's `sameTree`) |
+
+**To confirm with the team:** whether an item solved after the worked solution counts as correct. The code says no, matching the wireframes; the lesson plan doesn't say.
+
 ## Testing
 
 The answer tables in the lesson plans double as unit tests for the tree engine. Each engine feature's tests are written from them before the feature's code, so the expected answers come from the lesson plan, not from the code being tested. The reference trees are in `tests/engine/fixtures.ts`:
@@ -116,6 +130,8 @@ The answer tables in the lesson plans double as unit tests for the tree engine. 
 - **T2**: T with 45 inserted
 - **U** (final test): insert 35, 20, 50, 10, 25, 45, 60, 22
 - **X, V and the 55 tree**: invalid trees for Lesson 1 and the final test; **W**: a valid tree that only looks suspicious
+
+Assessment tests live in `tests/assessment/` and take their expected results from the lesson plan's pass rules and final test descriptors.
 
 ## Documentation
 
