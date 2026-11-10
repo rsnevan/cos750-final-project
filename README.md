@@ -104,6 +104,15 @@ The answer tables in the lesson plans double as unit tests for the tree engine. 
 
 Favourite Smartie colour: blue.
 
+### Coding team roles
+
+| Role | Owner | Code | SE document section |
+|---|---|---|---|
+| **Engine and content** | Ethan Wilke | Tree engine module, lesson and test content as JSON, unit tests from the answer tables, key mapping for retakes | Testing, data model |
+| **Visualiser and accessibility** | Unathi Dlamini | Tree rendering, animation player (back, step, replay, speed), screen-reader announcements, keyboard support, settings | UI design, accessibility requirements |
+| **Lessons and assessment** | Nevan Rahman | The six stage screens, the four question types, hint ladder, pass rules, final test, results and summary | Functional requirements, user flows |
+| **Integration and repo** | Meinka Singh | Repo and CI, splitting the prototype into modules, progress saving, GitHub Pages hosting, an offline-capable demo build | Assembles the SE document: process, architecture, deployment, future work |
+
 ## Use of generative AI
 
 Generative AI was used to help draft content and the GUI, as the examination specification allows. The tools and exact prompts are recorded in the ID document.
