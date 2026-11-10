@@ -12,3 +12,4 @@ export * from './remove';
 export * from './compare';
 export * from './slots';
 export * from './describe';
+export * from './steps';
