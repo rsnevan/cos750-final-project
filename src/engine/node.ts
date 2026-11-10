@@ -4,12 +4,8 @@
   form. 
  */
 import type { Shape, Tree, TreeNode } from './types';
+import { assertWholeNumber } from './keys';
 
-function assertWholeNumber(key: number): void {
-  if (!Number.isInteger(key)) {
-    throw new RangeError(`Keys must be whole numbers, but got ${key}`);
-  }
-}
 
 export function createNode(key: number, left: Tree = null, right: Tree = null): TreeNode { // children default to empty.
   assertWholeNumber(key);
