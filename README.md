@@ -85,11 +85,11 @@ Each feature is built and fully tested before the next one starts. Functions tha
 | # | Feature | File | Status |
 |---|---|---|---|
 | 0 | Scaffold: types, file outline, reference trees | all | Done |
-| 1 | Nodes and shapes | `node.ts` | To do |
-| 2 | Insert and build | `insert.ts` | To do |
-| 3 | Traversals | `traversal.ts` | To do |
-| 4 | Search | `search.ts` | To do |
-| 5 | Minimum and maximum | `extremes.ts` | To do |
+| 1 | Nodes and shapes | `node.ts` | Done |
+| 2 | Insert and build | `insert.ts` | Done |
+| 3 | Traversals | `traversal.ts` | Done |
+| 4 | Search | `search.ts` | Done |
+| 5 | Minimum and maximum | `extremes.ts` | Done |
 | 6 | Measures: size, height, depth, leaves, parent, children, subtree | `measures.ts` | To do |
 | 7 | BST rule check | `validate.ts` | To do |
 | 8 | Delete and successor | `remove.ts` | To do |
