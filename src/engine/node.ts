@@ -3,7 +3,6 @@
   Making nodes, and converting between trees and the nested-array 'Shape'
   form. 
  */
-import { NotImplementedError } from './errors';
 import type { Shape, Tree, TreeNode } from './types';
 
 function assertWholeNumber(key: number): void {
