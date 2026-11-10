@@ -117,7 +117,7 @@ The rules behind the end-of-lesson activities and the final test: pure TypeScrip
 | 1 | Settings: pass mark 0.8, middle band 0.6, 3 hint rungs, final test bands | `config.ts` | Done |
 | 2 | Hint ladder: nudge, highlight, worked solution; an item is scored only if solved before the solution appears | `hints.ts` | Done |
 | 3 | Activity bands (pass, mid, low), the Lesson 5 one-per-case rule, merging retries, final test descriptor and per-outcome status | `scoring.ts` | Done |
-| 4 | Progress: lesson and final test unlocking, badges | `progress.ts` | In progress |
+| 4 | Progress: lesson and final test unlocking, badges | `progress.ts` | Done |
 | 5 | Answer checking for the four question types | `answers.ts` | To do (tree answers need the engine's `sameTree`) |
 
 **To confirm with the team:** whether an item solved after the worked solution counts as correct. The code says no, matching the wireframes; the lesson plan doesn't say.
