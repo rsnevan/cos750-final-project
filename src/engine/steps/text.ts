@@ -9,6 +9,11 @@ export function plural(count: number, word: string): string {
   return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
 
+export function pathInWords(path: readonly number[]): string {
+  if (path.length <= 8) return path.join(', ');
+  return `${path.length} nodes, from ${path[0]} down to ${path.at(-1)}`;
+}
+
 // The parent-child edges along a path of keys: [50, 70, 60] gives [[50, 70], [70, 60]].
 export function pathEdges(path: readonly number[]): [number, number][] {
   const edges: [number, number][] = [];

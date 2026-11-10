@@ -107,8 +107,8 @@ The step builders in `src/engine/steps/` turn an operation into a list of frames
 |---|---|---|---|
 | 12 | Step and highlight types, pseudocode, search and insert steps | `steps/searchSteps.ts`, `steps/insertSteps.ts` | Done |
 | 13 | Build, minimum and maximum steps | `steps/buildSteps.ts`, `steps/extremeSteps.ts` | Done |
-| 14 | Traversal steps | `steps/traversalSteps.ts` | Done |
-| 15 | Delete steps | `steps/deleteSteps.ts` | To do |
+| 14 | Traversal steps | `steps/traversalSteps.ts` | Done    |
+| 15 | Delete steps | `steps/deleteSteps.ts` | Done |
 
 The content format and the retake resolver come after the steps.
 
