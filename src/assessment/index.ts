@@ -4,3 +4,4 @@ export * from './config';
 export * from './hints';
 export * from './scoring';
 export * from './progress';
+export * from './answers';

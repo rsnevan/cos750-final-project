@@ -118,7 +118,7 @@ The rules behind the end-of-lesson activities and the final test: pure TypeScrip
 | 2 | Hint ladder: nudge, highlight, worked solution; an item is scored only if solved before the solution appears | `hints.ts` | Done |
 | 3 | Activity bands (pass, mid, low), the Lesson 5 one-per-case rule, merging retries, final test descriptor and per-outcome status | `scoring.ts` | Done |
 | 4 | Progress: lesson and final test unlocking, badges | `progress.ts` | Done |
-| 5 | Answer checking for the four question types | `answers.ts` | To do (tree answers need the engine's `sameTree`) |
+| 5 | Answer checking for the four question types | `answers.ts` | Done, format provisional. "Build a tree" waits on the engine's `sameTree`; its test is skipped until then |
 
 **To confirm with the team:** whether an item solved after the worked solution counts as correct. The code says no, matching the wireframes; the lesson plan doesn't say.
 
