@@ -4,6 +4,7 @@
 
 A prototype of a tutor-style, pre-lecture app for COS 212 (Data Structures and Algorithms) students. It teaches **Binary Search Trees (BSTs)** to students who have never seen them, so they arrive at the lecture with the basics in place. The app ends each lesson with a low-stakes assessment that adds scaffolding when a student is struggling.
 
+
 ## Scope
 
 | | |
@@ -47,7 +48,7 @@ Every lesson follows the same six stages: **hook and recall → explore → expl
 
 ## Tech stack
 
-JavaScript, HTML and CSS with SVG for the tree visualiser. The tree engine is written in **TypeScript**, so the engine and the content format are a type-checked agreement between the modules. Tests run on **Vitest**. Hosting on GitHub Pages is planned. *(Build setup, sign-in and progress saving to be confirmed by the integration role.)*
+JavaScript, HTML and CSS with SVG for the tree visualiser. The tree engine is written in **TypeScript**, so the engine and the content format are a type-checked agreement between the modules; the rest of the app can stay in plain JavaScript and imports the engine like any other module. Tests run on **Vitest**. Hosting on GitHub Pages is planned. *(Build setup, sign-in and progress saving to be confirmed by the integration role.)*
 
 Planned modules:
 
@@ -73,6 +74,7 @@ npm run typecheck   # check the TypeScript types
 npm run check       # both, as CI will run them
 ```
 
+If npm fails with `Cannot read properties of null (reading 'edgesOut')`, that's a bug in npm. Use `npm ci`, or `npm install --legacy-peer-deps` if there's no lock file.
 
 ## Tree engine
 
@@ -80,7 +82,7 @@ The tree logic behind the app: pure TypeScript with no screens, storage or netwo
 
 ### Feature order
 
-Each feature is built and fully tested before the next one starts. Functions that aren't written yet throw `NotImplementedError`.
+Each feature was built and fully tested before the next one started. All eleven are done, so every engine function is implemented.
 
 | # | Feature | File | Status |
 |---|---|---|---|
@@ -90,14 +92,25 @@ Each feature is built and fully tested before the next one starts. Functions tha
 | 3 | Traversals | `traversal.ts` | Done |
 | 4 | Search | `search.ts` | Done |
 | 5 | Minimum and maximum | `extremes.ts` | Done |
-| 6 | Measures: size, height, depth, leaves, parent, children, subtree | `measures.ts` |   Done |
+| 6 | Measures: size, height, depth, leaves, parent, children, subtree | `measures.ts` | Done |
 | 7 | BST rule check | `validate.ts` | Done |
 | 8 | Delete and successor | `remove.ts` | Done |
-| 9 | Comparing and re-keying trees | `compare.ts` | To do |
-| 10 | Empty spots and allowed ranges | `slots.ts` | To do |
-| 11 | Tree as text, for screen readers | `describe.ts` | To do |
+| 9 | Comparing and re-keying trees | `compare.ts` | Done |
+| 10 | Empty spots and allowed ranges | `slots.ts` | Done |
+| 11 | Tree as text, for screen readers | `describe.ts` | Done |
 
-Animation steps, the content format and the retake resolver come after the engine.
+### Animation steps
+
+The step builders in `src/engine/steps/` turn an operation into a list of frames for the visualiser's player. Each `Step` is a complete snapshot: the tree, a `Highlight` saying what to emphasise, one sentence of text (shown, announced to screen readers and read aloud by narration) and the pseudocode line from `PSEUDOCODE`. The engine decides what is highlighted; the visualiser decides how it looks.
+
+| # | Feature | File | Status |
+|---|---|---|---|
+| 12 | Step and highlight types, pseudocode, search and insert steps | `steps/searchSteps.ts`, `steps/insertSteps.ts` | Done |
+| 13 | Build, minimum and maximum steps | `steps/buildSteps.ts`, `steps/extremeSteps.ts` | Done |
+| 14 | Traversal steps | `steps/traversalSteps.ts` | To do |
+| 15 | Delete steps | `steps/deleteSteps.ts` | To do |
+
+The content format and the retake resolver come after the steps.
 
 ### How each feature is built
 

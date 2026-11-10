@@ -6,3 +6,5 @@ export * from './types';
 export { PSEUDOCODE, LINES } from './pseudocode';
 export { searchSteps } from './searchSteps';
 export { insertSteps } from './insertSteps';
+export { buildSteps } from './buildSteps';
+export { extremeSteps } from './extremeSteps';
