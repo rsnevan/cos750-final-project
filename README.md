@@ -90,9 +90,9 @@ Each feature is built and fully tested before the next one starts. Functions tha
 | 3 | Traversals | `traversal.ts` | Done |
 | 4 | Search | `search.ts` | Done |
 | 5 | Minimum and maximum | `extremes.ts` | Done |
-| 6 | Measures: size, height, depth, leaves, parent, children, subtree | `measures.ts` | To do |
-| 7 | BST rule check | `validate.ts` | To do |
-| 8 | Delete and successor | `remove.ts` | To do |
+| 6 | Measures: size, height, depth, leaves, parent, children, subtree | `measures.ts` |   Done |
+| 7 | BST rule check | `validate.ts` | Done |
+| 8 | Delete and successor | `remove.ts` | Done |
 | 9 | Comparing and re-keying trees | `compare.ts` | To do |
 | 10 | Empty spots and allowed ranges | `slots.ts` | To do |
 | 11 | Tree as text, for screen readers | `describe.ts` | To do |
