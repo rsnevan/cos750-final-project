@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fromShape, LINES, PSEUDOCODE, search, searchSteps, toShape } from '../../../src/engine';
 import type { Shape } from '../../../src/engine';
 import { T_SHAPE, U_SHAPE } from '../fixtures';
-import { expectValidSteps } from './stepRules';
+import { expectValidSteps, expectVisitedIsPath } from './stepRules';
 
 const t = fromShape(T_SHAPE);
 
@@ -82,6 +82,7 @@ describe('searchSteps agrees with search, for every key from 1 to 99', () => {
       const steps = searchSteps(tree, key);
 
       expectValidSteps(steps, PSEUDOCODE.search);
+      expectVisitedIsPath(steps);
 
       // One step per comparison, plus one for the empty spot when not found.
       expect(steps).toHaveLength(result.path.length + (result.found ? 0 : 1));

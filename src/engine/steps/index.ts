@@ -8,3 +8,4 @@ export { searchSteps } from './searchSteps';
 export { insertSteps } from './insertSteps';
 export { buildSteps } from './buildSteps';
 export { extremeSteps } from './extremeSteps';
+export { traversalSteps, walkSteps } from './traversalSteps';

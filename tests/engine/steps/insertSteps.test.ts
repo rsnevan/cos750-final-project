@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fromShape, insert, insertSteps, LINES, PSEUDOCODE, sameTree, search, toShape } from '../../../src/engine';
 import type { Shape } from '../../../src/engine';
 import { T_SHAPE, U_SHAPE } from '../fixtures';
-import { expectValidSteps } from './stepRules';
+import { expectValidSteps, expectVisitedIsPath } from './stepRules';
 
 const t = fromShape(T_SHAPE);
 
@@ -95,6 +95,7 @@ describe('insertSteps agrees with insert, for every key from 1 to 99', () => {
       const steps = insertSteps(tree, key);
 
       expectValidSteps(steps, PSEUDOCODE.insert);
+      expectVisitedIsPath(steps);
 
       if (result.found) {
         // Comparisons up to the duplicate, and the tree never changes.

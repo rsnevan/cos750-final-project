@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { extremeSteps, fromShape, max, maxPath, min, minPath, toShape } from '../../../src/engine';
 import type { Shape } from '../../../src/engine';
 import { T2_SHAPE, T_SHAPE, U_SHAPE } from '../fixtures';
-import { expectValidSteps } from './stepRules';
+import { expectValidSteps, expectVisitedIsPath } from './stepRules';
 
 const t = fromShape(T_SHAPE);
 
@@ -75,6 +75,7 @@ describe('extremeSteps agrees with min and max', () => {
       const steps = extremeSteps(tree, which);
       const path = which === 'min' ? minPath(tree) : maxPath(tree);
       expectValidSteps(steps, []);
+      expectVisitedIsPath(steps);
       expect(steps).toHaveLength(path.length);
       expect(steps.at(-1)?.highlight.found).toBe(which === 'min' ? min(tree) : max(tree));
       expect(steps.at(-1)?.highlight.visited).toStrictEqual(path);

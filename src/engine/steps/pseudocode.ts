@@ -47,4 +47,5 @@ export const PSEUDOCODE = Object.freeze({
 export const LINES = Object.freeze({
   search: Object.freeze({ empty: 1, equal: 2, goLeft: 3, goRight: 4 }),
   insert: Object.freeze({ empty: 1, goLeft: 2, goRight: 3, duplicate: 4 }),
+  traverse: Object.freeze({ empty: 1, pre: 2, left: 3, in: 4, right: 5, post: 6 }),
 });

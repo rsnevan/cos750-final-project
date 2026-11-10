@@ -3,8 +3,13 @@
   Each step builder's tests call `expectValidSteps` on everything it produces.
  */
 import { expect } from 'vitest';
-import { contains, parentOf } from '../../../src/engine';
+import {parentOf, depth } from '../../../src/engine';
 import type { Highlight, Step } from '../../../src/engine';
+import type { Tree } from '../../../src/engine';
+
+function isNodeIn(tree: Tree, key: number): boolean {
+  return depth(tree, key) !== null;
+}
 
 // Every key a highlight points at, which must be a node in that step's tree.
 function keysPointedAt(h: Highlight): number[] {
@@ -46,7 +51,7 @@ export function expectValidSteps(steps: Step[], pseudocode: readonly string[]): 
 
     // Everything highlighted is really in this step's tree.
     for (const key of keysPointedAt(step.highlight)) {
-      expect(contains(step.tree, key), `highlighted key ${key} is not in the tree`).toBe(true);
+      expect(isNodeIn(step.tree, key), `highlighted key ${key} is not in the tree`).toBe(true);
     }
 
     // Emphasised edges are real parent-child links.
@@ -54,16 +59,19 @@ export function expectValidSteps(steps: Step[], pseudocode: readonly string[]): 
       expect(parentOf(step.tree, child)).toBe(parent);
     }
 
-    // A visited list is a path down the tree: each node is the parent of the next.
-    const visited = step.highlight.visited ?? [];
-    for (let i = 1; i < visited.length; i++) {
-      expect(parentOf(step.tree, visited[i] as number)).toBe(visited[i - 1]);
-    }
-
     // A slot is a genuinely empty spot in this step's tree.
     const slot = step.highlight.slot;
     if (slot !== undefined && slot.parent !== null) {
-      expect(contains(step.tree, slot.parent)).toBe(true);
+      expect(isNodeIn(step.tree, slot.parent)).toBe(true);
+    }
+  }
+}
+
+export function expectVisitedIsPath(steps: Step[]): void {
+  for (const step of steps) {
+    const visited = step.highlight.visited ?? [];
+    for (let i = 1; i < visited.length; i++) {
+      expect(parentOf(step.tree, visited[i] as number)).toBe(visited[i - 1]);
     }
   }
 }
