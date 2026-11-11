@@ -36,7 +36,7 @@ These come from the lesson plan, and the tree engine follows them, so every answ
 | 5 | Delete (leaf, one child, two children) | LO6 | 18 | Remove it |
 | Final | Final test on a new tree | LO1 to LO6 | 10 | n/a |
 
-Every lesson follows the same six stages: **hook and recall → explore → explain → worked example → try it → end-of-lesson activity** (Merrill's First Principles and Kolb's cycle). Lessons unlock in order and can be revisited at any time. Students sign in, so their progress follows them between computers.
+Every lesson follows the same six stages: **hook and recall → explore → explain → worked example → try it → end-of-lesson activity** (Merrill's First Principles and Kolb's cycle). Lessons unlock in order and can be revisited at any time. Progress is saved in the browser, and a progress code moves it to another computer (sign-in is future work).
 
 **Scaffolding and assessment**
 
@@ -49,7 +49,7 @@ Every lesson follows the same six stages: **hook and recall → explore → expl
 
 ## Tech stack
 
-JavaScript, HTML and CSS with SVG for the tree visualiser. The tree engine is written in **TypeScript**, so the engine and the content format are a type-checked agreement between the modules; the rest of the app can stay in plain JavaScript and imports the engine like any other module. Tests run on **Vitest**. Hosting on GitHub Pages is planned. *(Build setup, sign-in and progress saving to be confirmed by the integration role.)*
+JavaScript, HTML and CSS with SVG for the tree visualiser. The tree engine is written in **TypeScript**, so the engine and the content format are a type-checked agreement between the modules; the rest of the app can stay in plain JavaScript and imports the engine like any other module. Tests run on **Vitest**. **Vite** builds the app: a multi-file site published to GitHub Pages from `main` by GitHub Actions, and a single-file offline build for the demo. See the [integration guide](docs/integration-guide.md).
 
 Planned modules:
 
@@ -59,7 +59,8 @@ Planned modules:
 | Content | Lesson and test data (questions, hints, explanations) as JSON. Each question stores its task, and the engine works out the answer |
 | Visualiser | Tree rendering and the animation player (back, step, replay, speed) with text announcements |
 | Lessons and assessment | Stage screens, question types, hint ladder, pass rules, final test and results |
-| Progress | Student sign-in, saving progress and badges |
+| App shell (`src/app/`) | Routing between screens, the lesson overview, and the two calls screens make when a student finishes something |
+| Storage (`src/storage/`) | Saving progress, badges, settings and earlier attempts in the browser; progress codes for switching computers |
 
 All pass thresholds, hint counts and key mappings live in one config file.
 
@@ -74,6 +75,9 @@ npm run test:watch  # re-run tests on every save while working on a feature
 npm run typecheck   # check the TypeScript types
 npm run check       # both, as CI will run them
 npm run answers     # rewrite docs/answer-sheet.md after changing a lesson file
+npm run dev         # run the app locally with live reload (http://localhost:5173)
+npm run build       # build the site for GitHub Pages into dist/
+npm run build:offline  # build the whole app as one index.html into dist-offline/ for the demo
 ```
 
 If npm fails with `Cannot read properties of null (reading 'edgesOut')`, that's a bug in npm. Use `npm ci`, or `npm install --legacy-peer-deps` if there's no lock file.
@@ -197,6 +201,7 @@ Assessment tests live in `tests/assessment/` and take their expected results fro
 | ID document | Instructional design: ADDIE, learning theories, learning styles, motivation, assessment design, GenAI acknowledgement |
 | BST Lesson Plans V2 | Decisions, outcomes and full lesson plans; the storyboard for the coding team |
 | Wireframes V3 | Clickable prototype of every screen, with design notes |
+| [Integration guide](docs/integration-guide.md) | How screens plug into the app shell, saving progress, CI, GitHub Pages and the offline demo build |
 | [Answer sheet](docs/answer-sheet.md) | Every activity item's answers on every retake, generated from the lesson files |
 | [Project plan](https://docs.google.com/document/d/1-fj3un0OCV_rKYq1pjEL1eJnyLQb3BT87bS_KEk9sXQ/edit?usp=sharing) | Agenda, roles, document outlines and timeline |
 
