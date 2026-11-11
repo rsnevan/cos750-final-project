@@ -1,0 +1,316 @@
+.bst-visualiser {
+  --bst-ink: #17324d;
+  --bst-muted: #526579;
+  --bst-surface: #f5f8fb;
+  --bst-node: #ffffff;
+  --bst-line: #62788d;
+  --bst-current: #1769aa;
+  --bst-found: #237a4b;
+  --bst-offender: #a52c37;
+  --bst-text-scale: 1;
+  color: var(--bst-ink);
+  font: 1rem/1.5 system-ui, sans-serif;
+}
+
+.bst-visualiser--text-small {
+  --bst-text-scale: 0.9;
+  font-size: 0.9rem;
+}
+
+.bst-visualiser--text-large {
+  --bst-text-scale: 1.2;
+  font-size: 1.2rem;
+}
+
+.bst-visualiser--readable-font {
+  font-family: Verdana, Arial, sans-serif;
+  letter-spacing: 0.025em;
+}
+
+.bst-visualiser__canvas {
+  max-width: 100%;
+  overflow: auto;
+  background: var(--bst-surface);
+  border: 1px solid #bdc9d4;
+  border-radius: 0.5rem;
+}
+
+.bst-visualiser__tree {
+  display: block;
+  max-width: none;
+  margin: 0 auto;
+}
+
+.bst-visualiser__edge {
+  stroke: var(--bst-line);
+  stroke-width: 2;
+}
+
+.bst-visualiser__edge--highlighted {
+  stroke: var(--bst-current);
+  stroke-width: 5;
+}
+
+.bst-visualiser__edge-label,
+.bst-visualiser__tag,
+.bst-visualiser__slot-label,
+.bst-visualiser__ghost-label,
+.bst-visualiser__relabelled-key,
+.bst-visualiser__marker-label {
+  fill: var(--bst-ink);
+  font-size: calc(0.75rem * var(--bst-text-scale));
+  text-anchor: middle;
+}
+
+.bst-visualiser__node-circle {
+  fill: var(--bst-node);
+  stroke: #344c63;
+  stroke-width: 2;
+}
+
+.bst-visualiser__node-key {
+  fill: var(--bst-ink);
+  font-size: calc(1rem * var(--bst-text-scale));
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.bst-visualiser__node--current .bst-visualiser__node-circle {
+  stroke: var(--bst-current);
+  stroke-width: 5;
+}
+
+.bst-visualiser__node--found .bst-visualiser__node-circle,
+.bst-visualiser__found-ring {
+  stroke: var(--bst-found);
+  stroke-width: 3;
+}
+
+.bst-visualiser__found-ring {
+  fill: none;
+}
+
+.bst-visualiser__node--offender .bst-visualiser__node-circle {
+  stroke: var(--bst-offender);
+  stroke-width: 4;
+}
+
+.bst-visualiser__node--outlined .bst-visualiser__node-circle {
+  stroke-dasharray: 5 3;
+  stroke-width: 3;
+}
+
+.bst-visualiser__node--dimmed {
+  opacity: 0.35;
+}
+
+.bst-visualiser__node--dimmed .bst-visualiser__node-key {
+  text-decoration: line-through;
+}
+
+.bst-visualiser__node--ghost .bst-visualiser__node-circle {
+  stroke-dasharray: 5 4;
+}
+
+.bst-visualiser__node--selected .bst-visualiser__node-circle {
+  stroke: #8a4c00;
+  stroke-width: 4;
+}
+
+.bst-visualiser__node--offender .bst-visualiser__offender-mark {
+  fill: var(--bst-offender);
+  font-size: calc(1.1875rem * var(--bst-text-scale));
+  font-weight: 800;
+}
+
+.bst-visualiser__visit-badge {
+  fill: var(--bst-ink);
+  stroke: var(--bst-node);
+  stroke-width: 1;
+}
+
+.bst-visualiser__visit-number {
+  fill: white;
+  font-size: calc(0.6875rem * var(--bst-text-scale));
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.bst-visualiser__pick-badge {
+  fill: #8a4c00;
+  stroke: var(--bst-node);
+  stroke-width: 1;
+}
+
+.bst-visualiser__pick-number {
+  fill: white;
+  font-size: calc(0.6875rem * var(--bst-text-scale));
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.bst-visualiser__traversal-dot {
+  fill: #8a4c00;
+  stroke: var(--bst-node);
+  stroke-width: 1;
+}
+
+.bst-visualiser__slot-circle {
+  fill: var(--bst-node);
+  stroke: var(--bst-muted);
+  stroke-dasharray: 3 2;
+  stroke-width: 2;
+}
+
+.bst-visualiser__slot--highlighted .bst-visualiser__slot-circle {
+  stroke: var(--bst-current);
+  stroke-width: 4;
+}
+
+.bst-visualiser__slot:focus-visible,
+.bst-visualiser__node:focus-visible {
+  outline: none;
+}
+
+.bst-visualiser__slot:focus-visible .bst-visualiser__slot-circle,
+.bst-visualiser__node:focus-visible .bst-visualiser__node-circle {
+  stroke: #8a4c00;
+  stroke-width: 5;
+}
+
+.bst-visualiser__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.75rem;
+}
+
+.bst-visualiser:focus-visible {
+  outline: 3px solid #8a4c00;
+  outline-offset: 3px;
+}
+
+.bst-visualiser__keyboard-help {
+  color: var(--bst-muted);
+  font-size: 0.9em;
+}
+
+.bst-visualiser button,
+.bst-visualiser select {
+  min-height: 2.5rem;
+  padding: 0.35rem 0.75rem;
+  color: inherit;
+  background: var(--bst-node);
+  border: 1px solid #526579;
+  border-radius: 0.3rem;
+  font: inherit;
+}
+
+.bst-visualiser button:disabled {
+  opacity: 0.55;
+}
+
+.bst-visualiser button:focus-visible,
+.bst-visualiser select:focus-visible,
+.bst-visualiser input:focus-visible,
+.bst-visualiser summary:focus-visible {
+  outline: 3px solid #8a4c00;
+  outline-offset: 2px;
+}
+
+.bst-visualiser__caption {
+  margin-block: 0.75rem;
+  font-weight: 600;
+}
+
+.bst-visualiser__counter,
+.bst-visualiser__output {
+  color: var(--bst-muted);
+}
+
+.bst-visualiser__settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-block: 0.75rem;
+}
+
+.bst-visualiser__settings legend {
+  font-weight: 700;
+}
+
+.bst-visualiser__setting {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bst-visualiser__setting input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.bst-visualiser__tree-text,
+.bst-visualiser__pseudocode {
+  margin-block: 0.75rem;
+}
+
+.bst-visualiser__tree-text summary,
+.bst-visualiser__pseudocode summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.bst-visualiser__tree-text p {
+  margin-block: 0.35rem;
+}
+
+.bst-visualiser__pseudocode-lines {
+  padding-inline-start: 2.5rem;
+}
+
+.bst-visualiser__pseudocode-lines li {
+  padding-inline-start: 0.5rem;
+}
+
+.bst-visualiser__pseudocode-lines li[aria-current="step"] {
+  background: #fff1bd;
+  outline: 2px solid #8a4c00;
+  font-weight: 700;
+}
+
+.bst-visualiser--high-contrast {
+  --bst-ink: #000000;
+  --bst-muted: #111111;
+  --bst-surface: #ffffff;
+  --bst-node: #ffffff;
+  --bst-line: #000000;
+  --bst-current: #000000;
+  --bst-found: #000000;
+  --bst-offender: #000000;
+}
+
+.bst-visualiser--high-contrast .bst-visualiser__node--current .bst-visualiser__node-circle,
+.bst-visualiser--high-contrast .bst-visualiser__node--found .bst-visualiser__node-circle {
+  stroke-width: 6;
+}
+
+.bst-visualiser--reduced-motion *,
+.bst-visualiser--reduced-motion *::before,
+.bst-visualiser--reduced-motion *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.bst-visualiser__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
