@@ -1,0 +1,219 @@
+{
+  "lesson": 3,
+  "title": "Insert, minimum and maximum",
+  "short": "Insert",
+  "minutes": 15,
+  "outcomes": ["LO4"],
+  "summary": "Predict where a new key goes, and find the smallest and largest keys.",
+  "hook": {
+    "goal": "Predict the tree that results from inserting keys, and find its minimum and maximum keys.",
+    "scenario": {
+      "title": "Adding a contact",
+      "text": "You add a new contact to your phone. The search from Lesson 2 must still be able to find it. Where should it go?",
+      "recall": "In a price list stored as a BST, do you need to look at every price to find the cheapest?"
+    },
+    "warmUp": {
+      "question": "In tree T, where does a search for 45 stop?",
+      "tree": "T",
+      "options": [
+        {
+          "text": "At the empty right side of 40",
+          "reply": "Yes: 50, 30, 40, then the right side of 40 is empty. Keep that spot in mind."
+        },
+        {
+          "text": "At 40, because 40 is close to 45",
+          "reply": "A search only stops at an equal key or an empty spot. 45 is larger than 40, so it goes right."
+        },
+        {
+          "text": "At the empty left side of 60",
+          "reply": "45 is smaller than 50, so the search never goes right of the root."
+        }
+      ],
+      "answer": 0
+    }
+  },
+  "explore": [
+    { "kind": "slotProbe", "tree": "T", "key": 45 },
+    {
+      "kind": "reflect",
+      "prompt": "Where did your key have to go for the search to find it?",
+      "options": [
+        {
+          "text": "Exactly where the search for it ends: the empty spot it reaches",
+          "reply": "Yes. Insert is search, plus one new leaf where the search stops."
+        },
+        {
+          "text": "Anywhere along the bottom of the tree",
+          "reply": "Only one bottom spot works: the one the search reaches."
+        },
+        {
+          "text": "Next to the closest key",
+          "reply": "40 is close to 45, but only one side of it works. Which side did the search reach?"
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "explain": {
+    "pages": [
+      {
+        "title": "Insert",
+        "steps": [
+          "Search for the key.",
+          "When you reach an empty spot, put a new node there.",
+          "New nodes always become leaves.",
+          "No existing node moves.",
+          "Inserting a key that is already in the tree changes nothing."
+        ],
+        "diagram": {
+          "tree": "T2",
+          "highlight": {
+            "found": 45,
+            "edges": [
+              [50, 30],
+              [30, 40],
+              [40, 45]
+            ]
+          }
+        },
+        "caption": "Inserting 45 follows the search path 50, 30, 40.",
+        "pseudocode": "insert"
+      },
+      {
+        "title": "Minimum and maximum",
+        "steps": [
+          "Minimum: go left until there is no left child.",
+          "Maximum: go right until there is no right child.",
+          "No comparisons are needed.",
+          "The minimum can have a right child, so it is not always a leaf."
+        ],
+        "diagram": {
+          "tree": "T",
+          "highlight": {
+            "edges": [
+              [50, 30],
+              [30, 20],
+              [50, 70],
+              [70, 80]
+            ],
+            "tags": { "20": "min", "80": "max" }
+          }
+        }
+      }
+    ]
+  },
+  "worked": {
+    "examples": [
+      { "label": "Build T", "pseudocode": "insert", "steps": [{ "build": [50, 30, 70, 20, 40, 60, 80] }] },
+      { "label": "Insert 45", "pseudocode": "insert", "steps": [{ "insert": { "tree": "T", "key": 45 } }] },
+      {
+        "label": "Min and max",
+        "steps": [
+          { "extreme": { "tree": "T", "which": "min" } },
+          { "extreme": { "tree": "T", "which": "max" } }
+        ]
+      }
+    ]
+  },
+  "tryIt": { "kind": "insert", "title": "Insert 65", "tree": "T", "key": 65 },
+  "activity": {
+    "title": "Grow the tree",
+    "items": [
+      {
+        "id": "l3-insert-10",
+        "outcome": "LO4",
+        "tree": "T",
+        "ask": { "kind": "insertSlot", "key": 10 },
+        "prompt": "Insert {10} into this tree. Where does it go?",
+        "hints": [
+          { "text": "First search for {10}, as if you were looking for it." },
+          {
+            "text": "The empty spot where the search for {10} stops is marked. That is where a new node goes.",
+            "highlight": "emptySpot"
+          }
+        ],
+        "explanation": "Searching for {10} visits {path} and stops at the empty {side} side of {endAt}, so {10} becomes the {side} child of {endAt}.",
+        "misconception": "Thinking new keys go at the root, or that inserting moves existing nodes."
+      },
+      {
+        "id": "l3-insert-55",
+        "outcome": "LO4",
+        "tree": "T",
+        "ask": { "kind": "insertSlot", "key": 55 },
+        "prompt": "Insert {55} into this tree. Where does it go?",
+        "hints": [
+          { "text": "First search for {55}, as if you were looking for it." },
+          {
+            "text": "The empty spot where the search for {55} stops is marked. That is where a new node goes.",
+            "highlight": "emptySpot"
+          }
+        ],
+        "explanation": "Searching for {55} visits {path} and stops at the empty {side} side of {endAt}, so {55} becomes the {side} child of {endAt}.",
+        "misconception": "Thinking new keys go at the root, or that inserting moves existing nodes."
+      },
+      {
+        "id": "l3-duplicate",
+        "outcome": "LO4",
+        "tree": "T",
+        "ask": { "kind": "fixed" },
+        "prompt": "Insert {50} into this tree again. What happens?",
+        "parts": [
+          {
+            "type": "pick",
+            "options": [
+              "Nothing changes: duplicates are not added",
+              "A second {50} becomes the left child of {50}",
+              "The tree is rebuilt from the start",
+              "{50} goes to the right of {80}"
+            ],
+            "answer": 0,
+            "shuffle": true
+          }
+        ],
+        "hints": [
+          { "text": "First search for {50}. Where does the search end?" },
+          { "text": "The search finds {50} straight away at the root.", "highlight": { "visited": [50] } }
+        ],
+        "explanation": "Nothing changes. The search finds the key, and this app does not allow duplicate keys."
+      },
+      {
+        "id": "l3-build",
+        "outcome": "LO4",
+        "ask": { "kind": "build", "keys": [40, 20, 60, 10] },
+        "prompt": "Build a BST by inserting {40}, {20}, {60}, {10} in that order.",
+        "hints": [
+          { "text": "The first key becomes the root. Then search for each new key before placing it." },
+          { "text": "{40} is the root. {20} is smaller, so it goes left. Where do {60} and {10} go?" }
+        ],
+        "explanation": "Root {40}; left child {20} with left child {10}; right child {60}.",
+        "misconception": "Thinking new keys go at the root, or that inserting moves existing nodes."
+      },
+      {
+        "id": "l3-min-max",
+        "outcome": "LO4",
+        "tree": "T",
+        "ask": { "kind": "minMax", "find": ["min", "max"] },
+        "prompt": "Click the minimum key, then the maximum key.",
+        "hints": [
+          { "text": "You do not need to compare anything. Which direction leads to smaller keys?" },
+          { "text": "The far-left and far-right paths are highlighted.", "highlight": "extremePaths" }
+        ],
+        "explanation": "Minimum {min} (go left until you cannot). Maximum {max} (go right until you cannot).",
+        "misconception": "Thinking the minimum must be a leaf."
+      },
+      {
+        "id": "l3-subtree-min",
+        "outcome": "LO4",
+        "tree": "T",
+        "ask": { "kind": "minMax", "find": ["min"], "from": 70 },
+        "prompt": "Click the smallest key in the subtree rooted at {70}.",
+        "hints": [
+          { "text": "Start at {70}. Which way leads to smaller keys?" },
+          { "text": "From {70}, the path going left is highlighted.", "highlight": "extremePaths" }
+        ],
+        "explanation": "{min}: from {70}, go left until there is no left child.",
+        "bridge": "Remember this one for delete."
+      }
+    ]
+  }
+}

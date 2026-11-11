@@ -1,0 +1,340 @@
+{
+  "lesson": 1,
+  "title": "Trees and the BST rule",
+  "short": "Trees",
+  "minutes": 15,
+  "outcomes": ["LO1", "LO2"],
+  "summary": "Name the parts of a tree, and tell a valid BST from a tree that only looks like one.",
+  "hook": {
+    "goal": "Name the parts of a tree, and use the BST rule to decide whether a tree is a binary search tree.",
+    "scenario": {
+      "title": "Folders inside folders",
+      "text": "On your laptop a folder can hold other folders, and those can hold more folders. You have already used a tree.",
+      "recall": "A linked-list node has one \"next\" reference. What if a node had two?"
+    },
+    "warmUp": {
+      "question": "A linked-list node points to one next node. If every node could point to two nodes, what shape could you build?",
+      "options": [
+        {
+          "text": "Only a longer chain",
+          "reply": "A chain only needs one reference. With two, a node can split into two branches."
+        },
+        {
+          "text": "A branching shape, like folders inside folders",
+          "reply": "Yes. Each node can branch into a left and a right part. That shape is a binary tree."
+        },
+        {
+          "text": "A list that is sorted automatically",
+          "reply": "Two references do not sort anything by themselves. The shape is what changes: each node can branch."
+        }
+      ],
+      "answer": 1
+    },
+    "bridge": "You also met binary search, where one comparison throws away half of the values. Keep that in mind: the BST rule is what lets a tree do the same."
+  },
+  "explore": [
+    { "kind": "relatives", "tree": "T", "need": 3 },
+    {
+      "kind": "pickTree",
+      "prompt": "Predict: in which tree can a search always decide to go left or right at each node?",
+      "trees": [
+        { "label": "A", "tree": "T" },
+        { "label": "B", "tree": "X" },
+        { "label": "C", "tree": "SWAP" }
+      ],
+      "answer": 0,
+      "reveal": "Tree A. In B, 40 sits in 50's right subtree although it is smaller than 50. In C, the larger key is on the left."
+    },
+    {
+      "kind": "reflect",
+      "prompt": "What rule did the good tree follow?",
+      "options": [
+        {
+          "text": "Smaller keys on the left and larger keys on the right, at every node",
+          "reply": "That is the BST rule, which you will see written out next."
+        },
+        {
+          "text": "Every node has exactly two children",
+          "reply": "Not quite: in tree A some nodes have no children. Look at where the smaller keys sit."
+        },
+        {
+          "text": "The largest key is at the root",
+          "reply": "Not quite: 50 is at the root of A, and 80 is larger. Look at where the smaller keys sit."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "explain": {
+    "pages": [
+      {
+        "title": "Tree words",
+        "terms": [
+          {
+            "group": "Shape words",
+            "items": [
+              { "term": "Node", "meaning": "one item in the tree, holding a key" },
+              { "term": "Edge", "meaning": "the link between two nodes" },
+              { "term": "Root", "meaning": "the top node; it has no parent" },
+              { "term": "Leaf", "meaning": "a node with no children" }
+            ]
+          },
+          {
+            "group": "Family words",
+            "items": [
+              { "term": "Parent / child", "meaning": "a node and the node directly below it" },
+              { "term": "Sibling", "meaning": "two children of the same parent" },
+              { "term": "Subtree", "meaning": "a node and everything below it" }
+            ]
+          },
+          {
+            "group": "Measure words",
+            "items": [
+              { "term": "Depth", "meaning": "number of edges from the root to the node" },
+              { "term": "Height", "meaning": "number of edges on the longest path down to a leaf" }
+            ]
+          }
+        ],
+        "note": "Binary means each node has at most two children, called left and right.",
+        "diagram": {
+          "tree": "T",
+          "highlight": {
+            "tags": { "50": "root", "20": "leaf", "80": "leaf" },
+            "edges": [
+              [50, 30],
+              [30, 40]
+            ]
+          }
+        },
+        "caption": "Depth of 40 is 2 (two highlighted edges). Tree T has height 2."
+      },
+      {
+        "title": "The BST rule",
+        "steps": [
+          "For every node, every key in its left subtree is smaller than the node.",
+          "Every key in its right subtree is larger than the node.",
+          "The rule covers the whole subtree, not just the children.",
+          "An empty tree is a BST.",
+          "Duplicate keys are not allowed."
+        ],
+        "diagram": {
+          "tree": "T",
+          "highlight": {
+            "edgeLabels": [
+              [50, 30, "all smaller"],
+              [50, 70, "all larger"]
+            ]
+          }
+        },
+        "caption": "Everything under 30 is smaller than 50. Everything under 70 is larger than 50."
+      }
+    ]
+  },
+  "worked": {
+    "examples": [
+      {
+        "label": "Label tree T",
+        "steps": [
+          { "tree": "T", "highlight": { "tags": { "50": "root" } }, "text": "50 has no parent, so 50 is the root." },
+          {
+            "tree": "T",
+            "highlight": { "tags": { "50": "root", "20": "leaf", "40": "leaf", "60": "leaf", "80": "leaf" } },
+            "text": "20, 40, 60 and 80 have no children, so they are leaves."
+          },
+          {
+            "tree": "T",
+            "highlight": {
+              "visited": [50, 30, 40],
+              "edges": [
+                [50, 30],
+                [30, 40]
+              ]
+            },
+            "text": "The depth of 40 is 2: there are two edges from the root to 40."
+          },
+          {
+            "tree": "T",
+            "highlight": { "dimmed": [50, 70, 60, 80], "current": 30, "edges": [[30, 40]] },
+            "text": "The subtree rooted at 30 has height 1: the longest path down from 30 has one edge."
+          },
+          {
+            "tree": "T",
+            "highlight": {
+              "edges": [
+                [50, 30],
+                [30, 20]
+              ]
+            },
+            "text": "Tree T has height 2: the longest path from the root to a leaf has two edges."
+          }
+        ]
+      },
+      {
+        "label": "Check tree X",
+        "steps": [
+          {
+            "tree": "X",
+            "highlight": { "current": 50, "outlined": [30] },
+            "text": "Check 50. Its left subtree holds 30, which is smaller than 50. That side is fine."
+          },
+          {
+            "tree": "X",
+            "highlight": { "current": 50, "outlined": [70, 40] },
+            "text": "Its right subtree holds 70 and 40. Every key there must be larger than 50."
+          },
+          {
+            "tree": "X",
+            "highlight": { "offender": 40, "outlined": [50] },
+            "text": "40 is smaller than 50 but sits in 50's right subtree. The rule is broken at 40."
+          },
+          {
+            "tree": "X",
+            "highlight": { "offender": 40 },
+            "text": "Next to its parent 70, 40 looks fine. That is why checking only parent and child is not enough. X is not a BST."
+          }
+        ]
+      }
+    ]
+  },
+  "tryIt": {
+    "kind": "guided",
+    "title": "Label tree T",
+    "tree": "T",
+    "steps": [
+      {
+        "ask": "node",
+        "prompt": "Put the label \"root\" on the tree: click the root.",
+        "answer": "root",
+        "tag": "root",
+        "right": "50 has no parent, so it is the root.",
+        "wrong": "The root is the one node with no parent."
+      },
+      {
+        "ask": "node",
+        "prompt": "Now label a leaf: click any leaf.",
+        "answer": "leaves",
+        "tag": "leaf",
+        "right": "Correct: that node has no children.",
+        "wrong": "A leaf has no children. Look along the bottom row."
+      },
+      {
+        "ask": "node",
+        "prompt": "Label the parent of 40.",
+        "answer": { "parentOf": 40 },
+        "tag": "parent",
+        "right": "30 is directly above 40, so it is 40's parent.",
+        "wrong": "The parent is the node directly above 40."
+      },
+      {
+        "ask": "choice",
+        "prompt": "There is an empty spot on the right of 60. Which key could go there?",
+        "options": ["45", "65", "75"],
+        "answer": 1,
+        "highlight": { "slot": { "parent": 60, "side": "right" } },
+        "showRange": true,
+        "right": "65 fits: it is larger than 60 and smaller than 70.",
+        "wrong": "Check every ancestor: the spot is in 50's right subtree, in 70's left subtree, and on 60's right."
+      }
+    ]
+  },
+  "activity": {
+    "title": "Spot the BST",
+    "items": [
+      {
+        "id": "l1-root-leaves",
+        "outcome": "LO1",
+        "tree": "T",
+        "ask": { "kind": "rootAndLeaves" },
+        "prompt": "Click the root and every leaf of this tree.",
+        "hints": [
+          { "text": "The root has no parent. A leaf has no children. How many of each can you find?" },
+          {
+            "text": "The nodes with no children are now outlined. Remember the root as well.",
+            "highlight": "leaves"
+          }
+        ],
+        "explanation": "The root is {root}. The leaves are {leaves}, because they have no children."
+      },
+      {
+        "id": "l1-depth-height",
+        "outcome": "LO1",
+        "tree": "T",
+        "ask": { "kind": "depthHeight", "depthOf": 40, "heightOf": 30 },
+        "prompt": "Give the depth of {40} and the height of the subtree rooted at {30}.",
+        "hints": [
+          { "text": "Depth counts edges from the root. Height counts edges on the longest path down to a leaf." },
+          {
+            "text": "The edges from the root to {40} are highlighted, and the subtree rooted at {30} is outlined. Count edges, not nodes.",
+            "highlight": "depthHeight"
+          }
+        ],
+        "explanation": "The depth of {40} is 2: two edges from the root. The subtree rooted at {30} has height 1: one edge down to a leaf.",
+        "misconception": "Mixing up depth and height, or counting nodes instead of edges."
+      },
+      {
+        "id": "l1-valid-t",
+        "outcome": "LO2",
+        "tree": "T",
+        "ask": { "kind": "validity" },
+        "prompt": "Is this tree a valid BST?",
+        "hints": [
+          { "text": "For every node: are all keys on its left smaller, and all keys on its right larger?" },
+          {
+            "text": "The left subtree of the root is outlined. Is every key there smaller than {50}?",
+            "highlight": { "outlined": [30, 20, 40] }
+          }
+        ],
+        "explanation": "Valid. At every node, every key in the left subtree is smaller and every key in the right subtree is larger."
+      },
+      {
+        "id": "l1-invalid-x",
+        "outcome": "LO2",
+        "tree": "X",
+        "ask": { "kind": "validity" },
+        "prompt": "Is this tree a valid BST? If not, click the node that breaks the rule.",
+        "hints": [
+          { "text": "Compare each node with every ancestor, not only with its parent." },
+          {
+            "text": "Everything in {50}'s right subtree (outlined) must be larger than {50}. Which node does not fit?",
+            "highlight": { "outlined": [70, 40] }
+          }
+        ],
+        "explanation": "Invalid. {40} is in the right subtree of {50} but is smaller than {50}, even though it sits correctly under its parent {70}.",
+        "misconception": "Checking a node only against its parent."
+      },
+      {
+        "id": "l1-invalid-55",
+        "outcome": "LO2",
+        "tree": "T55",
+        "ask": { "kind": "validity" },
+        "prompt": "Is this tree a valid BST? If not, click the node that breaks the rule.",
+        "hints": [
+          { "text": "Compare each node with every ancestor, not only with its parent." },
+          {
+            "text": "Every key in {50}'s left subtree must be smaller than {50}, so the spot right of {30} only allows keys from {31} to {49}.",
+            "highlight": { "outlined": [30, 55], "tags": { "55": "allowed: {31} to {49}" } }
+          }
+        ],
+        "explanation": "Invalid. {55} is larger than {50} but sits on {50}'s left side.",
+        "misconception": "Checking a node only against its parent."
+      },
+      {
+        "id": "l1-parent-enough",
+        "outcome": "LO2",
+        "tree": "T55",
+        "ask": { "kind": "fixed" },
+        "prompt": "True or false: checking each parent against its own children is enough to know a tree is a BST.",
+        "parts": [{ "type": "pick", "options": ["True", "False"], "answer": 1 }],
+        "hints": [
+          { "text": "Think back to tree X. Did every parent-child pair look fine?" },
+          {
+            "text": "Here {55} is fine next to its parent {30}. Now compare it with the root.",
+            "highlight": { "outlined": [55, 50] }
+          }
+        ],
+        "explanation": "False. A key must be on the correct side of every ancestor, not only its parent.",
+        "misconception": "Checking a node only against its parent."
+      }
+    ]
+  }
+}
