@@ -1,0 +1,9 @@
+{
+  "passThreshold": 0.8,
+  "middleBand": 0.6,
+  "hintRungs": 3,
+  "countCorrectAfterSolution": false,
+  "lesson5NeedsEveryDeleteCase": true,
+  "retakeOffsets": [0, 7, -7, 13, 3],
+  "keyRange": [1, 99]
+}

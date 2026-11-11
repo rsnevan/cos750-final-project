@@ -1,0 +1,322 @@
+{
+  "lesson": 5,
+  "title": "Delete",
+  "short": "Delete",
+  "minutes": 18,
+  "outcomes": ["LO6"],
+  "summary": "Delete a key in each of the three cases and draw the resulting tree.",
+  "hook": {
+    "goal": "Delete a key from a BST in each of the three cases (leaf, one child, two children) and describe the resulting tree.",
+    "scenario": {
+      "title": "Removing a contact",
+      "text": "You delete a contact. The search from Lesson 2 must still find everyone else.",
+      "recall": "What could go wrong when you take a node out of the middle of the tree?"
+    },
+    "warmUp": {
+      "question": "In tree T, what is the smallest key in the subtree rooted at 70?",
+      "tree": "T",
+      "options": [
+        { "text": "60", "reply": "Yes: from 70, go left until you cannot. You will need this in a few minutes." },
+        { "text": "70", "reply": "70 is the root of that subtree. Go left from it." },
+        { "text": "20", "reply": "20 is the smallest key in the whole tree, not in the subtree rooted at 70." },
+        { "text": "80", "reply": "80 is the largest key in that subtree." }
+      ],
+      "answer": 0
+    }
+  },
+  "explore": [
+    {
+      "kind": "deleteTry",
+      "cases": [
+        {
+          "label": "Remove 20 from T",
+          "tree": "T",
+          "key": 20,
+          "options": [
+            { "text": "Nothing moves: 20 is a leaf, so just take it out", "result": "delete" },
+            { "text": "Move 40 into the empty spot", "result": { "shape": [50, [30, [40]], [70, [60], [80]]] } }
+          ]
+        },
+        {
+          "label": "Remove 40 from T2",
+          "tree": "T2",
+          "key": 40,
+          "options": [
+            { "text": "Move 45 up into 40's place", "result": "delete" },
+            {
+              "text": "Hang 45 under 20 instead",
+              "result": { "shape": [50, [30, [20, null, [45]]], [70, [60], [80]]] }
+            },
+            { "text": "Leave the gap empty", "result": null }
+          ]
+        },
+        {
+          "label": "Remove 70 from T",
+          "tree": "T",
+          "key": 70,
+          "options": [
+            {
+              "text": "Move 60 up and hang 80 under it",
+              "result": { "shape": [50, [30, [20], [40]], [60, null, [80]]] }
+            },
+            { "text": "Move 80 up and hang 60 under it", "result": "delete" },
+            { "text": "Leave the gap empty", "result": null }
+          ],
+          "note": "That keeps the rule here, but only because 60 and 80 are leaves. If they had their own children, one of them would have nowhere to go. The lesson shows a method that always works."
+        }
+      ]
+    },
+    {
+      "kind": "reflect",
+      "prompt": "Which removal was hardest, and why?",
+      "options": [
+        {
+          "text": "Removing 70: it had two children, so it was not obvious what should replace it",
+          "reply": "Most students say so. Case 3 needs a rule, the in-order successor, which you will see next."
+        },
+        {
+          "text": "Removing 40: its child had to move up",
+          "reply": "Moving a single child up is case 2. The two-children case needs a rule; you will see it next."
+        },
+        {
+          "text": "Removing 20: nothing had to move",
+          "reply": "A leaf is the easy case. The two-children case needs a rule; you will see it next."
+        }
+      ],
+      "answer": null
+    }
+  ],
+  "explain": {
+    "pages": [
+      {
+        "title": "Three cases",
+        "steps": [
+          "Step 0: find the node with search.",
+          "Case 1, leaf: remove it.",
+          "Case 2, one child: replace the node with its child. The child's whole subtree moves up.",
+          "Case 3, two children: find the in-order successor, the minimum of the right subtree.",
+          "Copy the successor's key into the node.",
+          "Then delete the successor's old node from the right subtree. It has at most one child, so this is case 1 or 2.",
+          "Why it works: the successor is larger than every key on the left and smaller than every other key on the right, so the BST rule still holds."
+        ],
+        "note": "The mirror option uses the predecessor, the maximum of the left subtree. This app uses the successor.",
+        "diagram": {
+          "tree": "T",
+          "highlight": { "tags": { "20": "case 1", "70": "case 3" }, "found": 80, "outlined": [80] }
+        },
+        "caption": "20 is a leaf, so deleting it is case 1. 70 has two children, so deleting it is case 3; its successor is 80.",
+        "pseudocode": "delete"
+      }
+    ]
+  },
+  "worked": {
+    "examples": [
+      {
+        "label": "Delete 20",
+        "deleteCase": "leaf",
+        "pseudocode": "delete",
+        "steps": [{ "delete": { "tree": "T", "key": 20 } }]
+      },
+      {
+        "label": "Delete 40 from T2",
+        "deleteCase": "one",
+        "pseudocode": "delete",
+        "steps": [{ "delete": { "tree": "T2", "key": 40 } }]
+      },
+      {
+        "label": "Delete 70",
+        "deleteCase": "two",
+        "pseudocode": "delete",
+        "steps": [{ "delete": { "tree": "T", "key": 70 } }]
+      },
+      {
+        "label": "Delete the root, 50",
+        "deleteCase": "two",
+        "pseudocode": "delete",
+        "steps": [{ "delete": { "tree": "T", "key": 50 } }]
+      }
+    ]
+  },
+  "tryIt": {
+    "kind": "guided",
+    "title": "Delete 70 from T",
+    "tree": "T",
+    "steps": [
+      {
+        "ask": "choice",
+        "prompt": "How many children does 70 have?",
+        "options": ["None", "One", "Two"],
+        "answer": 2,
+        "right": "Two children, 60 and 80, so this is case 3.",
+        "wrong": "Look directly below 70."
+      },
+      {
+        "ask": "node",
+        "prompt": "Click the in-order successor of 70: the smallest key in its right subtree.",
+        "answer": { "successorOf": 70 },
+        "highlight": { "outlined": [80] },
+        "right": "80. Go right to 80, then left as far as you can; 80 has no left child.",
+        "wrong": "Start in 70's right subtree (outlined), then go left as far as you can."
+      },
+      {
+        "ask": "choice",
+        "prompt": "What goes into 70's place?",
+        "options": ["Copy 80 into the node", "Move 60 up", "Leave the spot empty"],
+        "answer": 0,
+        "right": "Copy 80 into the node that held 70.",
+        "wrong": "Case 3 always uses the successor you just found.",
+        "after": { "tree": "T", "highlight": { "relabel": { "70": 80 }, "ghost": 80 } }
+      },
+      {
+        "ask": "choice",
+        "prompt": "What happens to the old 80 node?",
+        "options": ["Remove it: it is a leaf (case 1)", "Leave it where it is", "Move it under 60"],
+        "answer": 0,
+        "right": "Done. 80 now has left child 60, and the in-order sequence is still sorted.",
+        "wrong": "The old 80 is now a duplicate. It must go.",
+        "after": { "tree": { "from": "T", "delete": [70] }, "highlight": { "found": 80 } }
+      }
+    ]
+  },
+  "activity": {
+    "title": "Remove it",
+    "items": [
+      {
+        "id": "l5-delete-60",
+        "outcome": "LO6",
+        "tree": "T",
+        "ask": {
+          "kind": "delete",
+          "key": 60,
+          "result": {
+            "options": [
+              "{70} keeps only its right child {80}",
+              "{80} moves into {60}'s place",
+              "{70} is removed as well",
+              "{50} gets a new right child"
+            ],
+            "answer": 0
+          }
+        },
+        "prompt": "Delete {60} from this tree.",
+        "hints": [
+          { "text": "Count the children of {60} first." },
+          { "text": "{60} is marked. With no children, nothing has to move.", "highlight": "children" }
+        ],
+        "explanation": "{caseName}. {70} keeps only its right child {80}."
+      },
+      {
+        "id": "l5-delete-40",
+        "outcome": "LO6",
+        "tree": "T2",
+        "ask": {
+          "kind": "delete",
+          "key": 40,
+          "result": {
+            "options": [
+              "{45} takes {40}'s place as the right child of {30}",
+              "{45} becomes the left child of {20}",
+              "{45} is removed as well",
+              "{30} moves down into {40}'s place"
+            ],
+            "answer": 0
+          }
+        },
+        "prompt": "Delete {40} from this tree.",
+        "hints": [
+          { "text": "Count the children of {40} first." },
+          {
+            "text": "{40} is marked with its child outlined. With one child, that child moves up.",
+            "highlight": "children"
+          }
+        ],
+        "explanation": "{caseName}. {45} takes {40}'s place as the right child of {30}."
+      },
+      {
+        "id": "l5-delete-30",
+        "outcome": "LO6",
+        "tree": "T",
+        "ask": {
+          "kind": "delete",
+          "key": 30,
+          "successor": true,
+          "result": {
+            "options": [
+              "The node becomes {40}, with left child {20} and no right child",
+              "The node becomes {20}, with right child {40}",
+              "{40} becomes the root",
+              "The node becomes {40}, with left child {20} and right child {40}"
+            ],
+            "answer": 0
+          }
+        },
+        "prompt": "Delete {30} from this tree, using the in-order successor.",
+        "hints": [
+          { "text": "Count the children of {30} first." },
+          {
+            "text": "The right subtree of {30} is outlined. Its leftmost node is the successor.",
+            "highlight": "rightSubtree"
+          }
+        ],
+        "explanation": "{caseName}. The successor is {successor}: go right, then left as far as you can. Copy {successor} into the node and remove the old {successor}. The node becomes {40}, with left child {20} and no right child.",
+        "misconception": "Promoting a child automatically when there are two, or forgetting to remove the successor's old node."
+      },
+      {
+        "id": "l5-delete-50",
+        "outcome": "LO6",
+        "tree": "T",
+        "ask": {
+          "kind": "delete",
+          "key": 50,
+          "successor": true,
+          "result": {
+            "options": [
+              "The root becomes {60}, and {70} keeps only its right child {80}",
+              "The root becomes {70}, with children {30} and {80}",
+              "The root becomes {30}",
+              "The root becomes {60}, and {70} keeps both children"
+            ],
+            "answer": 0
+          }
+        },
+        "prompt": "Delete {50} from this tree, using the in-order successor.",
+        "hints": [
+          { "text": "Count the children of {50} first." },
+          {
+            "text": "The right subtree of {50} is outlined. Its leftmost node is the successor.",
+            "highlight": "rightSubtree"
+          }
+        ],
+        "explanation": "{caseName}. The successor is {successor}: go right to {70}, then left as far as you can. Copy {successor} into the root and remove the old {successor}, so {70} keeps only its right child {80}.",
+        "misconception": "Choosing the minimum of the whole tree instead of the minimum of the right subtree."
+      },
+      {
+        "id": "l5-successor",
+        "outcome": "LO6",
+        "tree": "T",
+        "ask": { "kind": "successor", "key": 50 },
+        "prompt": "Click the in-order successor of {50}.",
+        "hints": [
+          { "text": "The successor is the smallest key in the right subtree." },
+          { "text": "The right subtree of {50} is outlined. Find its leftmost node.", "highlight": "rightSubtree" }
+        ],
+        "explanation": "{successor}: go right to {70}, then left as far as you can.",
+        "misconception": "Choosing the minimum of the whole tree instead of the minimum of the right subtree."
+      },
+      {
+        "id": "l5-still-sorted",
+        "outcome": "LO6",
+        "tree": { "from": "T", "delete": [50] },
+        "ask": { "kind": "fixed" },
+        "intro": "This is tree T after deleting the root.",
+        "prompt": "After any delete, is the in-order sequence still sorted?",
+        "parts": [{ "type": "pick", "options": ["Yes", "No"], "answer": 0 }],
+        "hints": [
+          { "text": "A correct delete keeps the BST rule. What does the BST rule guarantee about in-order?" },
+          { "text": "In-order dots are shown on the tree. Read them from left to right.", "highlight": { "dots": "in" } }
+        ],
+        "explanation": "Yes. A correct delete keeps the BST rule, and the BST rule makes in-order sorted."
+      }
+    ]
+  }
+}
