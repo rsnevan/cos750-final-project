@@ -11,9 +11,11 @@
   Progress is a plain, serialisable object so the integration role can save
   it as it is. Every function returns a new object and never changes its input.
  */
+import type { LessonId } from '../content';
 import type { ActivityResult } from './scoring';
 
-export type LessonNumber = 1 | 2 | 3 | 4 | 5;
+// The five lessons: the content's LessonId without the final test.
+export type LessonNumber = Exclude<LessonId, 'final'>;
 export const LESSON_NUMBERS: readonly LessonNumber[] = [1, 2, 3, 4, 5];
 
 export type Badge = `lesson-${LessonNumber}` | 'bst-ready';

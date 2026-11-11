@@ -166,17 +166,17 @@ Every file is checked when it loads, and the content tests resolve every item on
 
 ## Assessment logic
 
-The rules behind the end-of-lesson activities and the final test: pure TypeScript with no screens, storage or network, built the same way as the engine (tests first). Screens import it from `src/assessment/index.ts`. Work happens on the `nevan/assessment` branch.
+What the screens do with the content's questions and results: pure TypeScript with no screens, storage or network, built the same way as the engine (tests first). Screens import it from `src/assessment/index.ts`. Work happens on the `nevan/assessment` branch.
+
+It builds on `src/content` rather than repeating it: answers are checked with `checkQuestion`, settings come from `CONFIG` (`data/config.json`), and the final test's results come from `finalResults`.
 
 | # | Feature | File | Status |
 |---|---|---|---|
-| 1 | Settings: pass mark 0.8, middle band 0.6, 3 hint rungs, final test bands | `config.ts` | Done |
-| 2 | Hint ladder: nudge, highlight, worked solution; an item is scored only if solved before the solution appears | `hints.ts` | Done |
-| 3 | Activity bands (pass, mid, low), the Lesson 5 one-per-case rule, merging retries, final test descriptor and per-outcome status | `scoring.ts` | Done |
-| 4 | Progress: lesson and final test unlocking, badges | `progress.ts` | Done |
-| 5 | Answer checking for the four question types | `answers.ts` | Done, format provisional. "Build a tree" waits on the engine's `sameTree`; its test is skipped until then |
+| 1 | Hint ladder state: nudge, highlight, worked solution; whether a late answer counts follows `countsAsCorrect` | `hints.ts` | Done |
+| 2 | Activity bands (pass, mid, low), the Lesson 5 one-per-case rule, merging a retry into the first attempt | `scoring.ts` | Done |
+| 3 | Progress: lesson and final test unlocking, badges, "continue where you left off" | `progress.ts` | Done |
 
-**To confirm with the team:** whether an item solved after the worked solution counts as correct. The code says no, matching the wireframes; the lesson plan doesn't say.
+**To confirm with the team:** whether an item solved after the worked solution counts as correct. `countCorrectAfterSolution` is `false`, matching the wireframes; the lesson plan doesn't say.
 
 ## Testing
 
@@ -187,7 +187,7 @@ The answer tables in the lesson plans double as unit tests for the tree engine. 
 - **U** (final test): insert 35, 20, 50, 10, 25, 45, 60, 22
 - **X, V and the 55 tree**: invalid trees for Lesson 1 and the final test; **W**: a valid tree that only looks suspicious
 
-Assessment tests live in `tests/assessment/` and take their expected results from the lesson plan's pass rules and final test descriptors.
+Assessment tests live in `tests/assessment/` and take their expected results from the lesson plan's pass rules.
 
 ## Documentation
 

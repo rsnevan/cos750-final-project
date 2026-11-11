@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { CONFIG, feedbackFor, newItem, recordAttempt } from '../../src/assessment';
+import { CONFIG } from '../../src/content';
+import { feedbackFor, newItem, recordAttempt } from '../../src/assessment';
 
 describe('hint ladder', () => {
   it('starts with no attempts and no feedback', () => {
@@ -51,6 +52,13 @@ describe('hint ladder', () => {
     expect(item.solved).toBe(true);
     expect(item.scored).toBe(false);
     expect(feedbackFor(item)).toBe('correct');
+  });
+
+  it('scores it after all when the content config says so', () => {
+    const config = { ...CONFIG, countCorrectAfterSolution: true };
+    let item = newItem();
+    for (let i = 0; i < 3; i++) item = recordAttempt(item, false, config);
+    expect(recordAttempt(item, true, config).scored).toBe(true);
   });
 
   it('ignores attempts once the item is solved', () => {

@@ -12,9 +12,9 @@ import {
   type Progress,
 } from '../../src/assessment';
 
-const pass: ActivityResult = activityResult([{ id: 'a', scored: true }]);
-const mid: ActivityResult = activityResult([{ id: 'a', scored: true }, { id: 'b', scored: true }, { id: 'c', scored: true }, { id: 'd', scored: false }, { id: 'e', scored: false }]);
-const low: ActivityResult = activityResult([{ id: 'a', scored: false }]);
+const pass: ActivityResult = activityResult([{ id: 'a', scored: true }], 1);
+const mid: ActivityResult = activityResult([{ id: 'a', scored: true }, { id: 'b', scored: true }, { id: 'c', scored: true }, { id: 'd', scored: false }, { id: 'e', scored: false }], 1);
+const low: ActivityResult = activityResult([{ id: 'a', scored: false }], 1);
 
 // Progress after passing lessons 1..n in order.
 function passedThrough(n: number): Progress {
