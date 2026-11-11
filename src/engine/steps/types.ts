@@ -34,7 +34,11 @@ export interface Highlight {
   // An empty spot to point at: where a search stopped or a key will go.
   readonly slot?: Slot;
   // Show the traversal dots for this order on every node.
-  readonly dots?: MarkerPosition;
+  readonly dots?: MarkerPosition | 'all';
+  // A short label beside `slot`, such as the keys allowed there: "61 to 69".
+  readonly slotLabel?: string;
+  // Short labels on edges, as [parent key, child key, label], such as [50, 30, 'all smaller'].
+  readonly edgeLabels?: readonly (readonly [number, number, string])[];
   // A marker passing one side of one node during a traversal.
   readonly marker?: { readonly key: number; readonly position: MarkerPosition };
   // The traversal sequence written so far.

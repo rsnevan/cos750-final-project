@@ -5,7 +5,7 @@ import { preorder, sameTree, searchSteps } from '../../src/engine';
 
 const RETAKES = CONFIG.retakeOffsets.map((_, retake) => retake);
 
-// Lesson 2, item 1: search for 20 in T. Answer: 50, 30, 20; found.
+/** Lesson 2, item 1: search for 20 in T. Answer: 50, 30, 20; found. */
 const SEARCH_20: ItemSpec = {
   id: 'test-search-20',
   outcome: 'LO3',
@@ -20,7 +20,7 @@ const SEARCH_20: ItemSpec = {
   misconception: 'Search checks every node.',
 };
 
-// Lesson 2, item 2: search for 65 in T, predicted from written options. Answer: 50, 70, 60; not found.
+/** Lesson 2, item 2: search for 65 in T, predicted from written options. Answer: 50, 70, 60; not found. */
 const SEARCH_65: ItemSpec = {
   id: 'test-search-65',
   outcome: 'LO3',
@@ -48,7 +48,7 @@ const SEARCH_65: ItemSpec = {
   explanation: 'The search visits {path}, then reaches the empty {side} side of {endAt}: not found.',
 };
 
-// Lesson 2, item 3: searching for 45, which node's empty side ends the search? Answer: the right side of 40.
+/** Lesson 2, item 3: searching for 45, which node's empty side ends the search? Answer: the right side of 40. */
 const SEARCH_END_45: ItemSpec = {
   id: 'test-search-end-45',
   outcome: 'LO3',
@@ -62,7 +62,7 @@ const SEARCH_END_45: ItemSpec = {
   explanation: '{path}, then the {side} side of {endAt} is empty, so the search stops there.',
 };
 
-// Lesson 2, item 4: the most nodes a search can visit in T. Answer: 3.
+/** Lesson 2, item 4: the most nodes a search can visit in T. Answer: 3. */
 const MAX_VISITS: ItemSpec = {
   id: 'test-max-visits',
   outcome: 'LO3',
@@ -76,7 +76,7 @@ const MAX_VISITS: ItemSpec = {
   explanation: 'At most height + 1 = {most} nodes, one per level.',
 };
 
-// Lesson 2, item 5: what does a search return at an empty spot? Answer: not found.
+/** Lesson 2, item 5: what does a search return at an empty spot? Answer: not found. */
 const EMPTY_SPOT: ItemSpec = {
   id: 'test-empty-spot',
   outcome: 'LO3',
@@ -98,12 +98,12 @@ const EMPTY_SPOT: ItemSpec = {
 
 type PickSpec = Extract<PartSpec, { type: 'pick' }>;
 
-// An item with some fields replaced.
+/** An item with some fields replaced. */
 function variant(item: ItemSpec, changes: Partial<ItemSpec>): ItemSpec {
   return { ...item, ...changes };
 }
 
-// The item's parts with a different answer part list.
+/** The item's parts with a different answer part list. */
 function withParts(item: ItemSpec, parts: PartSpec[]): ItemSpec {
   return variant(item, { parts });
 }
@@ -461,8 +461,9 @@ describe('every retake asks the same question with new keys', () => {
 
   it.each(ITEMS.map((item) => [item.id, item] as const))('%s', (_, item) => {
     const answers = (retake: number) => {
-      const keys = preorder(getTree(item.tree, retake));
-      return resolveItem(item, 2, retake).parts.map((part) => unshift(part, offsetFor(retake), keys));
+      const question = resolveItem(item, 2, retake);
+      const keys = preorder(question.tree);
+      return question.parts.map((part) => unshift(part, offsetFor(retake), keys));
     };
     const original = answers(0);
     for (const retake of RETAKES) {

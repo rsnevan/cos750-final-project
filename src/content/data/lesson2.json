@@ -1,0 +1,184 @@
+{
+  "lesson": 2,
+  "title": "Search, the core algorithm",
+  "short": "Search",
+  "minutes": 12,
+  "outcomes": ["LO3"],
+  "summary": "Trace a search for a key and say whether it is found.",
+  "hook": {
+    "goal": "Trace a search in a BST, listing the nodes visited, and say whether the key is found.",
+    "scenario": {
+      "title": "A guessing game",
+      "text": "I am thinking of a number from 1 to 100. After each guess I only say \"higher\" or \"lower\".",
+      "reveal": "Guessing 50 first is smartest: whatever I answer, half of the numbers are ruled out with one guess."
+    },
+    "warmUp": {
+      "question": "In binary search on a sorted array, what does one comparison let you do?",
+      "options": [
+        {
+          "text": "Check every value in turn",
+          "reply": "That is a linear search. Binary search does better with each comparison."
+        },
+        {
+          "text": "Discard half of the remaining values",
+          "reply": "Yes. One comparison rules out half of what is left. A BST search works the same way."
+        },
+        { "text": "Sort the array", "reply": "Binary search needs an array that is already sorted; it does not sort it." },
+        {
+          "text": "Jump straight to the largest value",
+          "reply": "Binary search starts in the middle, not at the largest value."
+        }
+      ],
+      "answer": 1
+    }
+  },
+  "explore": [
+    { "kind": "freeSearch", "tree": "T", "key": 60 },
+    {
+      "kind": "reflect",
+      "prompt": "What did you do at each node?",
+      "options": [
+        {
+          "text": "Compared 60 with the node, then went left if 60 was smaller and right if it was larger",
+          "reply": "Exactly. That one comparison per node is the whole search algorithm."
+        },
+        {
+          "text": "Checked the nodes from left to right",
+          "reply": "That would visit nearly every node. Your path skipped most of the tree. What decided each turn?"
+        },
+        {
+          "text": "Always went to the larger child",
+          "reply": "That happened to work for 60 at 50, but not at 70. What decided each turn?"
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "explain": {
+    "pages": [
+      {
+        "title": "How search works",
+        "steps": [
+          "Start at the root.",
+          "Compare the key you want with the node's key.",
+          "Equal: you have found it.",
+          "Smaller: go left.",
+          "Larger: go right.",
+          "Empty spot: the key is not in the tree.",
+          "Each step throws away a whole subtree, so you visit at most height + 1 nodes. In tree T that is 3."
+        ],
+        "diagram": {
+          "tree": "T",
+          "highlight": {
+            "edgeLabels": [
+              [50, 30, "smaller: left"],
+              [50, 70, "larger: right"]
+            ]
+          }
+        },
+        "pseudocode": "search"
+      }
+    ]
+  },
+  "worked": {
+    "examples": [
+      { "label": "Search for 60", "pseudocode": "search", "steps": [{ "search": { "tree": "T", "key": 60 } }] },
+      { "label": "Search for 45", "pseudocode": "search", "steps": [{ "search": { "tree": "T", "key": 45 } }] }
+    ]
+  },
+  "tryIt": { "kind": "search", "title": "Search for 80", "tree": "T", "key": 80 },
+  "activity": {
+    "title": "Find the path",
+    "items": [
+      {
+        "id": "l2-search-20",
+        "outcome": "LO3",
+        "tree": "T",
+        "ask": { "kind": "searchPath", "key": 20 },
+        "prompt": "Click the nodes visited when searching for {20}, in order. Then give the result.",
+        "hints": [
+          { "text": "At each node, ask: is {20} smaller or larger than this node?" },
+          { "text": "The half of the tree that cannot hold {20} is now dimmed.", "highlight": "otherHalf" }
+        ],
+        "explanation": "The search visits {path} and finds {20}.",
+        "misconception": "Thinking a search checks every node."
+      },
+      {
+        "id": "l2-search-65",
+        "outcome": "LO3",
+        "tree": "T",
+        "ask": { "kind": "searchPath", "key": 65 },
+        "intro": "Predict first, then check.",
+        "prompt": "Searching for {65} in this tree: which nodes are visited, and what is the result?",
+        "parts": [
+          {
+            "type": "pick",
+            "options": [
+              "{path}, then an empty spot: not found",
+              "{50}, {70}, {80}, then an empty spot: not found",
+              "{path}, {65}: found",
+              "{50}, {30}, {40}, then an empty spot: not found"
+            ],
+            "answer": 0,
+            "shuffle": true
+          }
+        ],
+        "hints": [
+          { "text": "Is {65} smaller or larger than {50}? Then than {70}?" },
+          { "text": "The half that cannot hold {65} is dimmed.", "highlight": "otherHalf" }
+        ],
+        "explanation": "The search visits {path}, then reaches the empty {side} side of {endAt}: not found.",
+        "misconception": "Stopping at a leaf instead of at an empty spot."
+      },
+      {
+        "id": "l2-search-end-45",
+        "outcome": "LO3",
+        "tree": "T",
+        "ask": { "kind": "searchEnd", "key": 45 },
+        "prompt": "Searching for {45}: which node's empty side ends the search?",
+        "hints": [
+          { "text": "Is {45} smaller or larger than {50}? Keep comparing until the spot you need is empty." },
+          { "text": "The half that cannot hold {45} is dimmed.", "highlight": "otherHalf" }
+        ],
+        "explanation": "{path}, then the {side} side of {endAt} is empty, so the search stops there.",
+        "misconception": "Stopping at a leaf instead of at an empty spot."
+      },
+      {
+        "id": "l2-max-visits",
+        "outcome": "LO3",
+        "tree": "T",
+        "ask": { "kind": "maxVisits" },
+        "prompt": "What is the most nodes a search can visit in this tree?",
+        "hints": [
+          { "text": "Each comparison moves you one level down. How many levels are there?" },
+          { "text": "The longest root-to-leaf path is highlighted.", "highlight": "longestPath" }
+        ],
+        "explanation": "At most height + 1 = {most} nodes, one per level.",
+        "misconception": "Thinking a search checks every node."
+      },
+      {
+        "id": "l2-empty-spot",
+        "outcome": "LO3",
+        "tree": "T",
+        "ask": { "kind": "fixed" },
+        "prompt": "What does a search return when it reaches an empty spot?",
+        "parts": [
+          {
+            "type": "pick",
+            "options": ["The last node it visited", "Not found", "The root", "The nearest key"],
+            "answer": 1
+          }
+        ],
+        "hints": [
+          { "text": "If the key were in the tree, where would it have to be?" },
+          {
+            "text": "An empty spot is shown on the tree. Could the key be anywhere else?",
+            "highlight": { "slot": { "parent": 40, "side": "right" } }
+          }
+        ],
+        "explanation": "Not found. If the key were in the tree, it would have to be in that empty spot.",
+        "misconception": "Stopping at a leaf instead of at an empty spot."
+      }
+    ]
+  }
+}

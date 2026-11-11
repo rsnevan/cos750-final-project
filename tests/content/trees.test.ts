@@ -12,7 +12,7 @@ import {
   X_SHAPE,
 } from '../engine/fixtures';
 
-// The lesson trees, drawn by hand from the lesson plan in the engine fixtures.
+/** The lesson trees, drawn by hand from the lesson plan in the engine fixtures. */
 const DRAWN: Record<string, Shape> = {
   T: T_SHAPE,
   T2: T2_SHAPE,
@@ -21,6 +21,8 @@ const DRAWN: Record<string, Shape> = {
   T55: T55_SHAPE,
   V: V_SHAPE,
   W: W_SHAPE,
+  // Lesson 1 explore, tree C: the sides swapped.
+  SWAP: [50, [70], [30]],
 };
 
 const NAMES = Object.keys(DRAWN);
@@ -42,7 +44,8 @@ describe('the tree library', () => {
     }
   });
 
-  it('keeps X, T55 and V invalid, and W valid, as Lesson 1 needs', () => {
+  it('keeps X, T55, V and SWAP invalid, and W valid, as Lesson 1 and the final test need', () => {
+    expect(checkBST(getTree('SWAP')).valid).toBe(false);
     expect(checkBST(getTree('X')).valid).toBe(false);
     expect(checkBST(getTree('T55')).valid).toBe(false);
     expect(checkBST(getTree('V')).valid).toBe(false);

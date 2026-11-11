@@ -4,6 +4,8 @@
 
 A prototype of a tutor-style, pre-lecture app for COS 212 (Data Structures and Algorithms) students. It teaches **Binary Search Trees (BSTs)** to students who have never seen them, so they arrive at the lecture with the basics in place. The app ends each lesson with a low-stakes assessment that adds scaffolding when a student is struggling.
 
+> Status: early build. The interactive wireframes (V3) are a working single-file prototype and the reference for how each screen behaves. The tree engine is being written test-first in `src/engine/`, one feature at a time; the other modules follow.
+
 ## Scope
 
 | | |
@@ -71,6 +73,7 @@ npm test            # run the tests once
 npm run test:watch  # re-run tests on every save while working on a feature
 npm run typecheck   # check the TypeScript types
 npm run check       # both, as CI will run them
+npm run answers     # rewrite docs/answer-sheet.md after changing a lesson file
 ```
 
 If npm fails with `Cannot read properties of null (reading 'edgesOut')`, that's a bug in npm. Use `npm ci`, or `npm install --legacy-peer-deps` if there's no lock file.
@@ -111,28 +114,50 @@ The step builders in `src/engine/steps/` turn an operation into a list of frames
 
 ## Lesson content
 
-The lesson and test content, plus the resolver that turns it into ready-to-show questions. The lessons and assessment screens import from `src/content/index.ts`. The JSON lives in `src/content/data/`.
+The five lessons and the resolver that turns them into ready-to-show lessons and questions. The lessons and assessment screens import from `src/content/index.ts`, never from individual files. The JSON lives in `src/content/data/`.
 
-The JSON stores each question's **task** ("search T for 65"), never its answer. The resolver asks the engine for the answer, so answers can't be mistyped, and retakes with new keys stay correct automatically.
+The JSON stores each question's **task** ("search T for 65"), never its computed answer. The resolver asks the engine for the answer, so answers can't be mistyped, and retakes with new keys stay correct automatically.
 
-- **`config.json`**: the pass mark, the retry band, the hint rungs, whether an answer counts after the worked solution, the Lesson 5 delete-case rule, the retake offsets and the key range. It is checked on load, so a typo fails the tests.
-- **`trees.json`**: the named lesson trees, either `insert` (a list of keys) or `shape` (drawn exactly, for the invalid trees). Each tree is checked to stay within 1–99 on every retake.
-- **Keys in text** are written `{50}`, so a retake shifts them. Plain numbers ("3 comparisons") are left alone, and values worked out by the resolver are written `{path}`.
-- **A lesson item** names a tree and a task (`ask`), such as `{ "kind": "searchPath", "key": 20 }`, plus its prompt, two hints and explanation. `resolveItem(item, lesson, retake)` builds the question: the tree with the retake's keys, the answer parts, the rung-2 highlights and the worked solution. An item can write its own `parts` instead of the task's defaults, and a click answer can name a worked-out value such as `"path"`.
-- **Rung-2 highlights** are a preset (`path`, `otherHalf`, `emptySpot`, `longestPath`) or written out with retake-0 keys.
+### What the screens call
+
+| Call | Gives |
+|---|---|
+| `getLesson(n)` | Lesson `n` (1 to 5) with every stage ready: hook, explore, explain pages with diagrams and pseudocode, worked examples as animation steps, and the try-it with its answers |
+| `activityQuestions(n, retake)` | The lesson's activity questions for a retake (0 is the original keys) |
+| `checkPart(part, response)` / `checkQuestion(question, responses)` | Whether an answer is right. For a path, order or build it also gives `onTrack` (every step so far is right, for step-by-step confirmation) and `firstWrong`; for a set of clicks it gives `missing` and `extra` |
+| `countsAsCorrect(correct, rungsShown)` | Whether a correct answer counts towards the pass mark: not once the worked solution was shown |
+| `finalQuestions(retake)` | The final test's ten questions for a retake, with no hints |
+| `finalResults(correct)` | The results screen from `{ itemId: true or false }`: the score, each outcome secure or not, the descriptor (Excellent, Good, Satisfactory or Limited) and a question to take to the lecture |
+| `CONFIG` | The settings in `config.json` |
+
+### The files
+
+- **`config.json`**: the pass mark, the retry band, the hint rungs, whether an answer counts after the worked solution, the Lesson 5 delete-case rule, the retake offsets and the key range.
+- **`trees.json`**: the named lesson trees, either `insert` (a list of keys) or `shape` (drawn exactly, for the invalid trees). Each tree is checked to stay within 1 to 99 on every retake.
+- **`final.json`**: the final test's ten items on tree U (no hints), the six outcomes with a lecture question each, and the descriptor bands. Excellent also needs the two-children delete right, as the ID document says.
+- **`lesson1.json` to `lesson5.json`**: the six stages of each lesson. Stage content always uses the original keys, so stage text uses plain numbers. Each activity item names a tree and a task (`ask`), such as `{ "kind": "searchPath", "key": 20 }`, with its prompt, two hints and explanation.
+- **Keys in activity text** are written `{50}`, so a retake shifts them. Plain numbers ("3 comparisons") are left alone, and values the resolver works out are written by name, such as `{path}` or `{successor}`.
+- **Hint highlights** are a preset (such as `path`, `otherHalf`, `leaves`, `rightSubtree`) or written out with retake-0 keys.
+
+Every file is checked when it loads, and the content tests resolve every item on every retake and compare every answer with the lesson plan's tables. A mistake fails `npm test` with the file and the exact place, such as `lesson3.json: activity.items[2].ask.key must be a whole number`.
+
+**[docs/answer-sheet.md](docs/answer-sheet.md)** lists every item's answers on every retake, for the lessons and the final test. After changing a lesson file, run `npm run answers`; a test fails if the sheet is out of date.
 
 | # | Feature | File | Status |
 |---|---|---|---|
 | 16 | Settings, trees and placeholders | `config.ts`, `trees.ts`, `placeholders.ts` | Done |
-| 17 | The resolver, with Lesson 2's question kinds | `resolve.ts` | Done |
-| 18 | Answer checking | `check.ts` | Next |
-| 19 | Lesson 2 in full, and the content checks | `data/lesson2.json` | |
-| 20–24 | Lessons 1, 3, 4, 5 and the final test | `data/*.json` | |
-| 25 | The content decisions, and how to change each one | `docs/` | |
+| 17 | The resolver, with Lesson 2's task kinds | `resolve.ts` | Done |
+| 18 | Answer checking | `check.ts` | Done |
+| 19 | Task kinds for Lessons 1, 3, 4 and 5 | `kinds.ts`, `highlights.ts`, `parts.ts` | Done |
+| 20 | The lesson file format, checked on load, and the stage resolver | `lessonSchema.ts`, `validateLesson.ts`, `lessons.ts` | Done |
+| 21 | Lessons 1 to 5 | `data/lesson1.json` to `data/lesson5.json` | Done |
+| 22 | The answer sheet | `answerSheet.ts`, `scripts/answers.ts` | Done |
+| 23 | The final test and its results | `finalTest.ts`, `data/final.json` | Done |
+| 24 | The content decisions, and how to change each one | `docs/` | Next |
 
 ### How each feature is built
 
-1. Create a branch
+1. Create a branch.
 2. Write the tests in `tests/engine/` or `tests/content/`, using the lesson plan's answers. Run them and watch them fail.
 3. Commit the failing tests: `test(engine): add insert and build tests`.
 4. Write the code until the tests pass. Commit: `feat(engine): implement insert and build`.
@@ -156,6 +181,7 @@ The answer tables in the lesson plans double as unit tests for the tree engine. 
 | ID document | Instructional design: ADDIE, learning theories, learning styles, motivation, assessment design, GenAI acknowledgement |
 | BST Lesson Plans V2 | Decisions, outcomes and full lesson plans; the storyboard for the coding team |
 | Wireframes V3 | Clickable prototype of every screen, with design notes |
+| [Answer sheet](docs/answer-sheet.md) | Every activity item's answers on every retake, generated from the lesson files |
 | [Project plan](https://docs.google.com/document/d/1-fj3un0OCV_rKYq1pjEL1eJnyLQb3BT87bS_KEk9sXQ/edit?usp=sharing) | Agenda, roles, document outlines and timeline |
 
 ## Key dates

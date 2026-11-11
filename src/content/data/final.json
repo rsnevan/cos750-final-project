@@ -1,0 +1,181 @@
+{
+  "title": "Final test",
+  "minutes": 10,
+  "summary": "Ten questions on a new tree. No hints, no timer, and you can retake it with new numbers.",
+  "banner": "No hints and no timer. Take your time.",
+  "firstNote": "This is a new tree, U. You will see full explanations and replays after the last question.",
+  "retakeNote": "This retake uses new numbers on the same tree shape.",
+  "outcomes": [
+    {
+      "id": "LO1",
+      "name": "Name the parts of a tree",
+      "lectureQuestion": "Why is height counted in edges rather than nodes?"
+    },
+    {
+      "id": "LO2",
+      "name": "Tell a valid BST from an invalid one",
+      "lectureQuestion": "Why is checking a node against its parent not enough to prove a tree is a BST?"
+    },
+    {
+      "id": "LO3",
+      "name": "Trace a search",
+      "lectureQuestion": "What happens to search time if the keys are inserted in sorted order?"
+    },
+    {
+      "id": "LO4",
+      "name": "Insert a key, and find the minimum and maximum",
+      "lectureQuestion": "Why do new keys always become leaves?"
+    },
+    {
+      "id": "LO5",
+      "name": "Write the three traversal orders",
+      "lectureQuestion": "Where would each traversal order be useful in a real program?"
+    },
+    {
+      "id": "LO6",
+      "name": "Delete a key in all three cases",
+      "lectureQuestion": "Why does delete use the in-order successor, instead of just moving one of the children up?"
+    }
+  ],
+  "descriptors": [
+    {
+      "name": "Excellent",
+      "min": 9,
+      "requires": ["final-delete-20"],
+      "meaning": "You apply all six outcomes accurately, including the two-children delete."
+    },
+    { "name": "Good", "min": 7, "meaning": "You apply most of the ideas accurately, with small slips." },
+    { "name": "Satisfactory", "min": 5, "meaning": "You handle the main operations correctly, with some gaps." },
+    { "name": "Limited", "min": 0, "meaning": "There are some gaps. The lecture will cover the missing ideas." }
+  ],
+  "items": [
+    {
+      "id": "final-root-leaves-height",
+      "outcome": "LO1",
+      "tree": "U",
+      "ask": { "kind": "rootAndLeaves", "withHeight": true },
+      "prompt": "Click the root and every leaf of tree U, and give the height of U.",
+      "hints": [],
+      "explanation": "Root {root}; leaves {leaves}; height {height}: the longest path, {35}, {20}, {25}, {22}, has {height} edges."
+    },
+    {
+      "id": "final-invalid-v",
+      "outcome": "LO2",
+      "tree": "V",
+      "ask": { "kind": "validity" },
+      "prompt": "Tree V: is it a valid BST? If not, click the node that breaks the rule.",
+      "hints": [],
+      "explanation": "Invalid. {35} is larger than {30} but sits on {30}'s left side."
+    },
+    {
+      "id": "final-valid-w",
+      "outcome": "LO2",
+      "tree": "W",
+      "ask": { "kind": "validity" },
+      "prompt": "Tree W: is it a valid BST? Pick the reason.",
+      "parts": [
+        {
+          "type": "pick",
+          "options": [
+            "Valid: every key is on the correct side of every ancestor",
+            "Invalid: {20} is larger than {15}",
+            "Invalid: {35} is smaller than {40}",
+            "Valid: each parent has at most two children"
+          ],
+          "answer": 0,
+          "shuffle": true
+        }
+      ],
+      "hints": [],
+      "explanation": "Valid. {20} is larger than {15} and smaller than {30}; {35} is smaller than {40} and larger than {30}."
+    },
+    {
+      "id": "final-search-47",
+      "outcome": "LO3",
+      "tree": "U",
+      "ask": { "kind": "searchPath", "key": 47 },
+      "prompt": "Click the nodes visited when searching for {47} in tree U, in order. Then give the result.",
+      "hints": [],
+      "explanation": "The search visits {path}, then reaches the empty {side} side of {endAt}, so {47} is not found."
+    },
+    {
+      "id": "final-insert-55",
+      "outcome": "LO4",
+      "tree": "U",
+      "ask": { "kind": "insertSlot", "key": 55 },
+      "prompt": "Insert {55} into tree U. Where does it go?",
+      "hints": [],
+      "explanation": "Searching for {55} visits {path} and stops at the empty {side} side of {endAt}, so {55} becomes the {side} child of {endAt}."
+    },
+    {
+      "id": "final-min-max",
+      "outcome": "LO4",
+      "tree": "U",
+      "ask": { "kind": "minMax", "find": ["min", "max"] },
+      "prompt": "Click the minimum key of U, then the maximum key.",
+      "hints": [],
+      "explanation": "Minimum {min} (go left until you cannot). Maximum {max} (go right until you cannot)."
+    },
+    {
+      "id": "final-in-order",
+      "outcome": "LO5",
+      "tree": "U",
+      "ask": { "kind": "traversal", "order": "in" },
+      "prompt": "Write the in-order sequence for tree U.",
+      "hints": [],
+      "explanation": "In-order for tree U: {sequence}."
+    },
+    {
+      "id": "final-post-order",
+      "outcome": "LO5",
+      "tree": "U",
+      "ask": { "kind": "traversal", "order": "post" },
+      "prompt": "Write the post-order sequence for tree U.",
+      "hints": [],
+      "explanation": "Post-order for tree U: {sequence}."
+    },
+    {
+      "id": "final-delete-25",
+      "outcome": "LO6",
+      "tree": "U",
+      "ask": {
+        "kind": "delete",
+        "key": 25,
+        "result": {
+          "options": [
+            "{22} becomes the right child of {20}",
+            "{22} becomes the left child of {20}",
+            "{20} is removed as well",
+            "{22} is removed and {25} stays"
+          ],
+          "answer": 0
+        }
+      },
+      "prompt": "Delete {25} from tree U.",
+      "hints": [],
+      "explanation": "{caseName}. {22} becomes the right child of {20}."
+    },
+    {
+      "id": "final-delete-20",
+      "outcome": "LO6",
+      "tree": "U",
+      "ask": {
+        "kind": "delete",
+        "key": 20,
+        "successor": true,
+        "result": {
+          "options": [
+            "The node becomes {22}, with left child {10} and right child {25}",
+            "The node becomes {25}, with left child {10} and right child {22}",
+            "The node becomes {10}, with right child {25}",
+            "{25} moves up and {22} is removed"
+          ],
+          "answer": 0
+        }
+      },
+      "prompt": "Delete {20} from tree U, using the in-order successor.",
+      "hints": [],
+      "explanation": "{caseName}. The successor is {successor}: go right to {25}, then left as far as you can. Copy {successor} into the node and remove the old {successor}."
+    }
+  ]
+}

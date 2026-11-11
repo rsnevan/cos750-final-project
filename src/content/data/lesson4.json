@@ -1,0 +1,210 @@
+{
+  "lesson": 4,
+  "title": "Traversals",
+  "short": "Traversals",
+  "minutes": 15,
+  "outcomes": ["LO5"],
+  "summary": "Write the pre-order, in-order and post-order sequences, and explain why in-order is sorted.",
+  "hook": {
+    "goal": "Produce the in-order, pre-order and post-order sequences of a BST, and explain why in-order is sorted.",
+    "scenario": {
+      "title": "Listing every file",
+      "text": "To list every file in a set of nested folders, you have to visit every folder exactly once.",
+      "recall": "Does the order you list them in matter?"
+    },
+    "warmUp": {
+      "question": "In tree T, what is the subtree rooted at 30?",
+      "tree": "T",
+      "options": [
+        { "text": "30, 20 and 40", "reply": "Yes: a subtree is a node and everything below it." },
+        { "text": "30 only", "reply": "A subtree includes everything below the node too." },
+        { "text": "20 and 40 only", "reply": "The subtree includes the node it is rooted at." },
+        { "text": "50, 30, 20 and 40", "reply": "50 is above 30, so it is not in 30's subtree." }
+      ],
+      "answer": 0
+    }
+  },
+  "explore": [
+    { "kind": "walk", "tree": "T" },
+    { "kind": "orderGuess", "tree": "T", "order": "pre" },
+    {
+      "kind": "reflect",
+      "prompt": "When did you write each node down: before, between or after its children?",
+      "options": [
+        {
+          "text": "Before its children",
+          "reply": "That is pre-order. The other two choices are also traversals; you will see all three next."
+        },
+        {
+          "text": "Between its two children",
+          "reply": "That is in-order. The other two choices are also traversals; you will see all three next."
+        },
+        {
+          "text": "After its children",
+          "reply": "That is post-order. The other two choices are also traversals; you will see all three next."
+        }
+      ],
+      "answer": null
+    }
+  ],
+  "explain": {
+    "pages": [
+      {
+        "title": "Three ways to walk the tree",
+        "steps": [
+          "A traversal visits every node exactly once.",
+          "Pre-order: node, left subtree, right subtree.",
+          "In-order: left subtree, node, right subtree.",
+          "Post-order: left subtree, right subtree, node.",
+          "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them.",
+          "On the diagram, the dot on the left of a node marks pre-order, below marks in-order, and on the right marks post-order."
+        ],
+        "diagram": { "tree": "T", "highlight": { "dots": "all" } },
+        "caption": "Walk around the outside of the tree, starting left of the root. Write a node when you pass the dot for your order.",
+        "pseudocode": "traverse"
+      }
+    ]
+  },
+  "worked": {
+    "examples": [
+      { "label": "Pre-order", "pseudocode": "traverse", "steps": [{ "traversal": { "tree": "T", "order": "pre" } }] },
+      { "label": "In-order", "pseudocode": "traverse", "steps": [{ "traversal": { "tree": "T", "order": "in" } }] },
+      { "label": "Post-order", "pseudocode": "traverse", "steps": [{ "traversal": { "tree": "T", "order": "post" } }] },
+      {
+        "label": "Compare",
+        "steps": [
+          {
+            "tree": "T",
+            "highlight": { "dots": "all" },
+            "text": "Pre-order: 50 30 20 40 70 60 80. In-order: 20 30 40 50 60 70 80. Post-order: 20 40 30 60 80 70 50."
+          },
+          {
+            "tree": "T",
+            "highlight": { "dots": "in" },
+            "text": "Only in-order is sorted. The BST rule puts every smaller key to the left of a node and every larger key to the right, and in-order writes left, then node, then right."
+          }
+        ]
+      }
+    ]
+  },
+  "tryIt": {
+    "kind": "traversal",
+    "title": "Pre-order of the subtree rooted at 30",
+    "tree": "T",
+    "order": "pre",
+    "from": 30
+  },
+  "activity": {
+    "title": "Walk the tree",
+    "items": [
+      {
+        "id": "l4-in-order",
+        "outcome": "LO5",
+        "tree": "T",
+        "ask": { "kind": "traversal", "order": "in" },
+        "prompt": "Write the in-order sequence for this tree.",
+        "hints": [
+          { "text": "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them." },
+          {
+            "text": "Dots are now on the tree: a node is written when the walk passes its bottom dot.",
+            "highlight": "dots"
+          }
+        ],
+        "explanation": "In-order for this tree: {sequence}.",
+        "misconception": "Thinking a traversal goes level by level."
+      },
+      {
+        "id": "l4-pre-order",
+        "outcome": "LO5",
+        "tree": "T",
+        "ask": { "kind": "traversal", "order": "pre" },
+        "prompt": "Write the pre-order sequence for this tree.",
+        "hints": [
+          { "text": "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them." },
+          {
+            "text": "Dots are now on the tree: a node is written when the walk passes its left dot.",
+            "highlight": "dots"
+          }
+        ],
+        "explanation": "Pre-order for this tree: {sequence}.",
+        "misconception": "Mixing up pre-order and post-order."
+      },
+      {
+        "id": "l4-post-order",
+        "outcome": "LO5",
+        "tree": "T",
+        "ask": { "kind": "traversal", "order": "post" },
+        "prompt": "Write the post-order sequence for this tree.",
+        "hints": [
+          { "text": "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them." },
+          {
+            "text": "Dots are now on the tree: a node is written when the walk passes its right dot.",
+            "highlight": "dots"
+          }
+        ],
+        "explanation": "Post-order for this tree: {sequence}.",
+        "misconception": "Mixing up pre-order and post-order."
+      },
+      {
+        "id": "l4-pre-order-70",
+        "outcome": "LO5",
+        "tree": "T",
+        "ask": { "kind": "traversal", "order": "pre", "from": 70 },
+        "prompt": "Write the pre-order sequence for the subtree rooted at {70}.",
+        "hints": [
+          { "text": "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them." },
+          {
+            "text": "Dots are now on the tree: a node is written when the walk passes its left dot.",
+            "highlight": "dots"
+          }
+        ],
+        "explanation": "Pre-order for the subtree rooted at {70}: {sequence}.",
+        "misconception": "Mixing up pre-order and post-order."
+      },
+      {
+        "id": "l4-post-order-t2",
+        "outcome": "LO5",
+        "tree": "T2",
+        "ask": { "kind": "traversal", "order": "post" },
+        "prompt": "Write the post-order sequence for this tree (T with {45} added).",
+        "hints": [
+          { "text": "Memory aid: \"pre\" is before the children, \"in\" is between them, \"post\" is after them." },
+          {
+            "text": "Dots are now on the tree: a node is written when the walk passes its right dot.",
+            "highlight": "dots"
+          }
+        ],
+        "explanation": "Post-order for this tree (T with {45} added): {sequence}.",
+        "misconception": "Mixing up pre-order and post-order."
+      },
+      {
+        "id": "l4-why-sorted",
+        "outcome": "LO5",
+        "tree": "T",
+        "ask": { "kind": "fixed" },
+        "prompt": "Why is the in-order sequence of a BST sorted?",
+        "parts": [
+          {
+            "type": "pick",
+            "options": [
+              "Every left key is smaller and every right key is larger, so writing left, then node, then right goes from small to large",
+              "In-order visits the tree level by level",
+              "Insert puts the keys in sorted order",
+              "The root is always the middle key"
+            ],
+            "answer": 0,
+            "shuffle": true
+          }
+        ],
+        "hints": [
+          {
+            "text": "In-order writes the left subtree, then the node, then the right subtree. What does the BST rule say about those?"
+          },
+          { "text": "The in-order dots are shown. Read them from left to right.", "highlight": { "dots": "in" } }
+        ],
+        "explanation": "The BST rule puts every smaller key on the left and every larger key on the right, and in-order writes left, node, right.",
+        "misconception": "Thinking a traversal goes level by level."
+      }
+    ]
+  }
+}
