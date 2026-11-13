@@ -99,7 +99,7 @@ export function mountQuestionForm(
         }
         field.append(cards);
         field.append(el('p', { class: 'answer-sequence', 'aria-live': 'polite' },
-          chosen.length === 0 ? 'Your order: not started' : `Your order: ${chosen.join(' → ')}`));
+          chosen.length === 0 ? 'Your order: not started' : `Your order: ${chosen.join(', ')}`));
         if (chosen.length > 0) {
           field.append(el('p', { class: 'flow-feedback', role: 'status', 'aria-live': 'polite' }, sequenceFeedback(part, chosen)));
         }
@@ -162,7 +162,7 @@ export function mountQuestionForm(
             if (doneButton !== undefined) doneButton.disabled = !state.confirmed && selection.length === 0;
             if (undoButton !== undefined) undoButton.disabled = selection.length === 0;
             if (sequenceLabel !== undefined) {
-              sequenceLabel.textContent = selection.length === 0 ? 'Selected: none' : `Selected: ${selection.join(' → ')}`;
+              sequenceLabel.textContent = selection.length === 0 ? 'Selected: none' : `Selected: ${selection.join(', ')}`;
             }
             if (feedbackLabel !== undefined) feedbackLabel.textContent = sequenceFeedback(part, selection);
           };
@@ -225,7 +225,7 @@ export function mountQuestionForm(
             }
             field.append(action);
             sequenceLabel = el('p', { class: 'answer-sequence', 'aria-live': 'polite' },
-              selection.length === 0 ? 'Selected: none' : `Selected: ${selection.join(' → ')}`);
+              selection.length === 0 ? 'Selected: none' : `Selected: ${selection.join(', ')}`);
             field.append(sequenceLabel);
           }
         }

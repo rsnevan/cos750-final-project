@@ -447,7 +447,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         });
         const undo = actionButton('Undo last node', () => {
           path.pop();
-          picked.textContent = path.length ? `Path: ${path.join(' → ')}` : 'Path: not started';
+          picked.textContent = path.length ? `Path: ${path.join(', ')}` : 'Path: not started';
           status.textContent = sequenceFeedback(path, item.path, 'search path');
           draw();
         });
@@ -457,7 +457,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
           onNode: (key) => {
             if (path.length >= item.path.length) return;
             path = [...path, key];
-            picked.textContent = `Path: ${path.join(' → ')}`;
+            picked.textContent = `Path: ${path.join(', ')}`;
             status.textContent = sequenceFeedback(path, item.path, 'search path');
             draw();
           },
@@ -507,7 +507,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
             }));
         };
         const update = () => {
-          picked.textContent = selected.length ? `Your sequence: ${selected.join(' → ')}` : 'Your sequence: not started';
+          picked.textContent = selected.length ? `Your sequence: ${selected.join(', ')}` : 'Your sequence: not started';
           status.textContent = sequenceFeedback(selected, item.answer, `${item.order}-order traversal`);
           draw();
           drawCards();
@@ -675,7 +675,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
           onNode: (key) => {
             if (mode === 'path' && selected.length < task.path.length) {
               selected.push(key);
-              sequence.textContent = `Path: ${selected.join(' → ')}`;
+              sequence.textContent = `Path: ${selected.join(', ')}`;
               status.textContent = sequenceFeedback(selected, task.path, 'search path');
               redraw();
             }
@@ -727,7 +727,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
       });
       undo = actionButton('Undo last node', () => {
       selected.pop();
-      sequence.textContent = selected.length ? `Path: ${selected.join(' → ')}` : 'Path: not started';
+      sequence.textContent = selected.length ? `Path: ${selected.join(', ')}` : 'Path: not started';
       status.textContent = sequenceFeedback(selected, task.path, 'search path');
       redraw();
       });
@@ -758,7 +758,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
           if (!selected.includes(key)) {
             if (selected.length >= task.sequence.length) return;
             selected = [...selected, key];
-            output.textContent = `Your order: ${selected.join(' → ')}`;
+            output.textContent = `Your order: ${selected.join(', ')}`;
             status.textContent = sequenceFeedback(selected, task.sequence, `${task.order}-order traversal`);
             draw();
           }
@@ -773,7 +773,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
       });
       const undo = actionButton('Undo last node', () => {
         selected.pop();
-        output.textContent = selected.length ? `Your order: ${selected.join(' → ')}` : 'Your order: not started';
+        output.textContent = selected.length ? `Your order: ${selected.join(', ')}` : 'Your order: not started';
         status.textContent = sequenceFeedback(selected, task.sequence, `${task.order}-order traversal`);
         draw();
       });

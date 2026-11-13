@@ -27,15 +27,16 @@
   color: inherit;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   font: inherit;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 
 .stage-tab--current {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
-  font-weight: 700;
+  border-color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--text);
+  font-weight: 600;
 }
 
 .flow-card,
@@ -70,6 +71,11 @@
   min-height: 1.5em;
 }
 
+.answer-sequence,
+.flow-pseudocode code {
+  font-family: var(--mono);
+}
+
 .flow-success {
   color: var(--done);
   font-weight: 650;
@@ -78,8 +84,9 @@
 .flow-hint,
 .flow-note {
   padding: 0.65rem 0.85rem;
-  border-left: 4px solid var(--focus);
-  background: var(--surface);
+  border: 1px solid var(--hint-line);
+  border-radius: var(--radius-sm);
+  background: var(--hint-bg);
 }
 
 .flow-goal {
@@ -196,7 +203,6 @@
 @media (max-width: 560px) {
   .stage-tab {
     flex: 1 1 9rem;
-    border-radius: 0.5rem;
   }
 
   .term-list {

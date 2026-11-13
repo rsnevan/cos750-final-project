@@ -2,6 +2,7 @@
   App shell: creates the progress store, follows the URL hash and draws one
   screen at a time. Locked lessons redirect to the overview.
  */
+import './fonts.css';
 import './app.css';
 import { isLessonUnlocked, isTestUnlocked } from '../assessment';
 import { createStore } from '../storage';
