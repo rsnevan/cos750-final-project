@@ -1,4 +1,5 @@
-.bst-visualiser {
+.bst-visualiser,
+.bst-visualiser__tree {
   --bst-ink: #17324d;
   --bst-muted: #526579;
   --bst-surface: #f5f8fb;
