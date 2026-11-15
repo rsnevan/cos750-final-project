@@ -66,6 +66,11 @@
   text-anchor: middle;
 }
 
+/* Labels beside a node or empty spot start after it, so they never cover the circle. */
+.bst-visualiser__side-label {
+  text-anchor: start;
+}
+
 .bst-visualiser__node-circle {
   fill: var(--bst-node);
   stroke: var(--bst-ink);

@@ -590,11 +590,11 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
     }
     if (total > 1) {
       const controls = el('div', { class: 'actions' });
-      if (index > 0) controls.append(actionButton('Previous explore', () => {
+      if (index > 0) controls.append(actionButton('Previous exploration', () => {
         exploreIndex = Math.max(0, exploreIndex - 1);
         render();
       }));
-      if (index + 1 < total) controls.append(actionButton('Next explore', () => {
+      if (index + 1 < total) controls.append(actionButton('Next exploration', () => {
         exploreIndex += 1;
         render();
       }));
@@ -697,7 +697,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         });
         undo.hidden = mode !== 'path';
       };
-      const pathDone = actionButton('I have followed the path', () => {
+      const pathDone = actionButton('Check path', () => {
         const expected = task.path;
         if (!sameSequence(selected, expected)) {
           status.textContent = 'Not quite. Use the BST rule to check each comparison, then undo or start again.';
@@ -771,6 +771,10 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         },
       });
       const check = actionButton('Check traversal', () => {
+        if (selected.length === 0) {
+          status.textContent = 'Click the nodes in the order the traversal visits them, then check.';
+          return;
+        }
         const correct = sameSequence(selected, task.sequence);
         status.textContent = correct
           ? 'Correct traversal order.'

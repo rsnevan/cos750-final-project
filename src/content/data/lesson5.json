@@ -155,7 +155,7 @@
         "prompt": "Click the in-order successor of 70: the smallest key in its right subtree.",
         "answer": { "successorOf": 70 },
         "highlight": { "outlined": [80] },
-        "right": "80. Go right to 80, then left as far as you can; 80 has no left child.",
+        "right": "80 is the successor. Go right to 80, then left as far as you can; 80 has no left child.",
         "wrong": "Start in 70's right subtree (outlined), then go left as far as you can."
       },
       {
