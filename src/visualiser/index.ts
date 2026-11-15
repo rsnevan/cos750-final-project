@@ -2,6 +2,7 @@ import './visualiser.css';
 import { describe } from '../engine';
 import type { Highlight, Side, Step, Tree } from '../engine';
 import { layoutTree, type NodePosition, type SlotPosition } from './layout';
+import { speakNarration } from './narration';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const NODE_RADIUS = 25;
@@ -371,6 +372,10 @@ export function createPlayer(
     ...options.settings,
   };
   let timer: ReturnType<typeof globalThis.setInterval> | undefined;
+  let isPlaying = false;
+  let playbackToken = 0;
+  let pausedNarration = false;
+  let narrationEndedWhilePaused = false;
 
   const root = document.createElement('section');
   root.className = 'bst-visualiser';
@@ -495,6 +500,16 @@ export function createPlayer(
     options.onSettingsChange?.(settings);
     if (name === 'narration' && value === false && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      if (isPlaying) {
+        stopPlayback();
+        startPlayback();
+      } else if (pausedNarration) {
+        stopPlayback();
+        pauseButton.textContent = 'Resume';
+      }
+    } else if (name === 'narration' && value === true && isPlaying) {
+      stopPlayback();
+      startPlayback();
     }
   }
 
@@ -505,9 +520,28 @@ export function createPlayer(
       globalThis.clearInterval(timer);
       timer = undefined;
     }
+    isPlaying = false;
+    pausedNarration = false;
+    narrationEndedWhilePaused = false;
+    playbackToken += 1;
   }
 
-  function render(): void {
+  function advancePlayback(token: number): void {
+    if (token !== playbackToken) return;
+    if (!isPlaying) {
+      narrationEndedWhilePaused = true;
+      return;
+    }
+    if (index >= steps.length - 1) {
+      stopPlayback();
+      pauseButton.textContent = 'Replay';
+      return;
+    }
+    index += 1;
+    render(token);
+  }
+
+  function render(narrationPlaybackToken?: number): void {
     const current = steps[index];
     if (current === undefined) {
       throw new Error(`Animation step ${index} is missing`);
@@ -530,13 +564,19 @@ export function createPlayer(
       return paragraph;
     }));
     if (settings.narration && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(current.text));
+      speakNarration(
+        window.speechSynthesis,
+        current.text,
+        narrationPlaybackToken === undefined,
+        speed,
+        narrationPlaybackToken === undefined ? undefined : () => advancePlayback(narrationPlaybackToken),
+      );
     }
   }
 
   function back(): void {
     stopPlayback();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     pauseButton.textContent = 'Play';
     if (index > 0) {
       index -= 1;
@@ -546,6 +586,7 @@ export function createPlayer(
 
   function step(): void {
     stopPlayback();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     pauseButton.textContent = 'Play';
     if (index < steps.length - 1) {
       index += 1;
@@ -554,20 +595,53 @@ export function createPlayer(
   }
 
   function pause(): void {
-    stopPlayback();
+    if (timer !== undefined) {
+      globalThis.clearInterval(timer);
+      timer = undefined;
+    }
+    isPlaying = false;
+    if (settings.narration && 'speechSynthesis' in window) {
+      window.speechSynthesis.pause();
+      pausedNarration = true;
+    }
     pauseButton.textContent = 'Resume';
   }
 
   function startPlayback(): void {
+    if (pausedNarration && settings.narration && 'speechSynthesis' in window) {
+      isPlaying = true;
+      pausedNarration = false;
+      pauseButton.textContent = 'Pause';
+      if (narrationEndedWhilePaused) {
+        narrationEndedWhilePaused = false;
+        advancePlayback(playbackToken);
+      } else {
+        window.speechSynthesis.resume();
+      }
+      return;
+    }
     if (index >= steps.length - 1) {
       index = 0;
-      render();
+    }
+    const current = steps[index];
+    if (current === undefined) {
+      throw new Error(`Animation step ${index} is missing`);
+    }
+    isPlaying = true;
+    pauseButton.textContent = 'Pause';
+    if (settings.narration && 'speechSynthesis' in window) {
+      playbackToken += 1;
+      window.speechSynthesis.cancel();
+      render(playbackToken);
+      return;
     }
     if (steps.length === 1) {
       pauseButton.textContent = 'Replay';
+      isPlaying = false;
+      render();
       return;
     }
-    pauseButton.textContent = 'Pause';
+    render();
     timer = globalThis.setInterval(() => {
       if (index >= steps.length - 1) {
         stopPlayback();
@@ -581,8 +655,8 @@ export function createPlayer(
 
   function replay(): void {
     stopPlayback();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     index = 0;
-    render();
     startPlayback();
   }
 
@@ -590,12 +664,12 @@ export function createPlayer(
   stepButton.addEventListener('click', step);
   replayButton.addEventListener('click', replay);
   pauseButton.addEventListener('click', () => {
-    if (timer === undefined) startPlayback();
+    if (!isPlaying) startPlayback();
     else pause();
   });
   speedSelect.addEventListener('change', () => {
     speed = Number(speedSelect.value);
-    if (timer !== undefined) {
+    if (isPlaying) {
       stopPlayback();
       startPlayback();
     }
