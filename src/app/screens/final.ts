@@ -36,7 +36,7 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
     }
 
     const treeMount = el('div', { class: 'flow-tree', 'aria-label': 'Reference tree U' });
-    drawTree(treeMount, getTree('U'));
+    drawTree(treeMount, getTree('U', retake));
 
     if (!started) {
       body.append(
@@ -60,7 +60,6 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
     body.append(
       el('p', { class: 'flow-meta' }, `Question ${index + 1} of ${questions.length}`),
       el('p', { class: 'flow-note' }, FINAL_TEST.banner),
-      treeMount,
       el('p', { class: 'flow-prompt' }, question.prompt),
       mount,
     );

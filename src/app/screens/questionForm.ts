@@ -234,8 +234,17 @@ export function mountQuestionForm(
       fields[index] = field;
     });
 
+    // Pick and order answers do not draw the tree, so show it above them.
+    const answerDrawsTree = question.parts.some((part) => part.type === 'click' || part.type === 'place');
+    const treeView: HTMLElement[] = [];
+    if (!answerDrawsTree) {
+      const mount = el('div', { class: 'question-tree flow-tree' });
+      drawTree(mount, question.tree, copyBase(question, options.highlight));
+      treeView.push(mount);
+    }
+
     submitButton = el('button', { type: 'submit', class: 'button button--primary' }, 'Check answer');
-    const form = el('form', { class: 'question-form' }, ...fields, submitButton);
+    const form = el('form', { class: 'question-form' }, ...treeView, ...fields, submitButton);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       refreshSubmit();
