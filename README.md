@@ -265,7 +265,7 @@ Favourite Smartie colour: blue.
 |---|---|---|---|
 | **Engine and content** | Ethan Wilke | Tree engine module, lesson and test content as JSON, unit tests from the answer tables, key mapping for retakes | Testing, data model |
 | **Visualiser and accessibility** | Unathi Dlamini | Tree rendering, animation player (back, step, replay, speed), screen-reader announcements, keyboard support, settings; the lesson and final-test screens | UI design, accessibility requirements |
-| **Assessment** | Nevan Rahman | Hint ladder, scoring bands, unlocking and badges; the shared palette, fonts and final styling; demo mode | Requirements, assessment logic |
+| **Lessons and assessment** | Nevan Rahman | Hint ladder, scoring bands, unlocking and badges; the shared palette, fonts and final styling; demo mode | Requirements, assessment logic |
 | **Integration and repo** | Meinka Singh | Repo and CI, the app shell and routing, progress saving and progress codes, GitHub Pages hosting, the offline single-file build | Assembles the SE document: process, architecture, deployment, future work |
 
 ## Use of generative AI
