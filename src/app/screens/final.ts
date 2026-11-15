@@ -36,7 +36,7 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
     }
 
     const treeMount = el('div', { class: 'flow-tree', 'aria-label': 'Reference tree U' });
-    drawTree(treeMount, getTree('U'));
+    drawTree(treeMount, getTree('U', retake));
 
     if (!started) {
       body.append(
@@ -60,11 +60,10 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
     body.append(
       el('p', { class: 'flow-meta' }, `Question ${index + 1} of ${questions.length}`),
       el('p', { class: 'flow-note' }, FINAL_TEST.banner),
-      treeMount,
       el('p', { class: 'flow-prompt' }, question.prompt),
       mount,
     );
-    mountQuestionForm(mount, question, (responses) => submit(question, responses));
+    mountQuestionForm(mount, question, (responses) => submit(question, responses), { showAnswers: ctx.demo });
     root.append(body);
   }
 
@@ -98,7 +97,7 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
       el('section', { class: 'flow-card' },
         el('h2', {}, 'Outcomes'),
         el('ul', {}, ...summary.outcomes.map((outcome) =>
-          el('li', {}, `${outcome.name}: ${outcome.secure ? 'secure' : 'not yet secure'}`)))),
+          el('li', {}, `${outcome.name}: ${outcome.secure ? 'secure' : 'listen for this in the lecture'}`)))),
       el('section', { class: 'flow-card' },
         el('h2', {}, 'For the lecture'),
         el('p', {}, summary.lectureQuestion)),

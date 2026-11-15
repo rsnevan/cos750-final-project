@@ -33,7 +33,7 @@ export const overviewScreen: Screen = (root, _route, ctx) => {
   const list = el('ol', { class: 'lesson-map' });
   for (const n of LESSON_NUMBERS) {
     const lesson = getLesson(n);
-    const unlocked = isLessonUnlocked(progress, n);
+    const unlocked = ctx.demo || isLessonUnlocked(progress, n);
     const done = progress.passed.includes(n);
     const status = done ? 'Done' : unlocked ? 'Ready' : 'Locked';
     const title = unlocked
@@ -47,7 +47,7 @@ export const overviewScreen: Screen = (root, _route, ctx) => {
       ),
     );
   }
-  const testUnlocked = isTestUnlocked(progress);
+  const testUnlocked = ctx.demo || isTestUnlocked(progress);
   const testStatus = progress.testCompleted ? 'Done' : testUnlocked ? 'Ready' : 'Locked';
   list.append(
     el('li', { class: `lesson-card lesson-card--${testStatus.toLowerCase()}` },

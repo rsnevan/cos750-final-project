@@ -26,7 +26,8 @@
   font-size: 1.2rem;
 }
 
-.bst-visualiser--readable-font {
+.bst-visualiser--readable-font,
+.bst-visualiser--readable-font .bst-visualiser__tree {
   font-family: Verdana, Arial, sans-serif;
   letter-spacing: 0.025em;
 }
@@ -64,6 +65,11 @@
   fill: var(--bst-ink);
   font-size: calc(0.75rem * var(--bst-text-scale));
   text-anchor: middle;
+}
+
+/* Labels beside a node or empty spot start after it, so they never cover the circle. */
+.bst-visualiser__side-label {
+  text-anchor: start;
 }
 
 .bst-visualiser__node-circle {

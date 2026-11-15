@@ -4,7 +4,16 @@
 
 A prototype of a tutor-style, pre-lecture app for COS 212 (Data Structures and Algorithms) students. It teaches **Binary Search Trees (BSTs)** to students who have never seen them, so they arrive at the lecture with the basics in place. The app ends each lesson with a low-stakes assessment that adds scaffolding when a student is struggling.
 
-> Status: early build. The interactive wireframes (V3) are a working single-file prototype and the reference for how each screen behaves. The tree engine is being written test-first in `src/engine/`, one feature at a time; the other modules follow.
+> **Status: complete prototype.** All five lessons and the final test work end to end, with saved progress. 795 automated tests pass on every pull request, and every merge into `main` is published automatically.
+
+## Try it
+
+- **Online:** https://rsnevan.github.io/cos750-final-project/
+- **Offline:** run `npm run build:offline` and open `dist-offline/index.html` in any browser by double-clicking it. It is the whole app in one file and needs no internet. Every CI run also attaches it as the `offline-demo` download.
+- **Demo mode:** add `?demo` to the address (online or offline) to unlock every lesson and the final test and show each question's answer. Demo progress is kept apart from real progress, disappears when the tab closes, and "Reset demo" in the header clears it.
+- **Switching computers:** progress is saved in the browser. Under "Switching computers?" on the overview, copy your progress code and paste it into the app on the other computer.
+
+Works in a current version of Chrome, Edge, Firefox or Safari on a laptop or desktop computer.
 
 ## Scope
 
@@ -41,7 +50,7 @@ Every lesson follows the same six stages: **hook and recall → explore → expl
 **Scaffolding and assessment**
 
 - Hint ladder on every item: a nudge question, then a highlight on the tree, then the worked solution and a parallel item with new keys.
-- 80% or more passes the activity and unlocks the next lesson. 60 to 79% shows explanations, then retries only the missed items with new keys. Below 60% re-explains the lesson in a different form before a retry.
+- 80% or more passes the activity and unlocks the next lesson. 60 to 79% shows explanations, then retries only the missed items with new keys. Below 60% shows the lesson's Explain pages again on one review page, then retries the whole activity with new keys. (The full design also re-explains the lesson in a different form, such as narration; the prototype shows the review page.)
 - Retries are unlimited and no marks are shown. Retakes use new keys, made by adding a fixed offset to every key: this keeps the keys in order, so every answer stays valid, and keeps keys between 1 and 99.
 - The final test has no hints and no timer. Full explanations follow the last item, and results are reported per outcome ("Secure" or "Listen for this in the lecture").
 
@@ -49,20 +58,20 @@ Every lesson follows the same six stages: **hook and recall → explore → expl
 
 ## Tech stack
 
-JavaScript, HTML and CSS with SVG for the tree visualiser. The tree engine is written in **TypeScript**, so the engine and the content format are a type-checked agreement between the modules; the rest of the app can stay in plain JavaScript and imports the engine like any other module. Tests run on **Vitest**. **Vite** builds the app: a multi-file site published to GitHub Pages from `main` by GitHub Actions, and a single-file offline build for the demo. See the [integration guide](docs/integration-guide.md).
+**TypeScript**, HTML and CSS, with SVG for the tree visualiser and no UI framework. TypeScript makes the content format and the shapes passed between modules a type-checked agreement. Tests run on **Vitest**. **Vite** builds the app: a multi-file site published to GitHub Pages from `main` by GitHub Actions, and a single-file offline build. Fonts are stored in the repo, so the app makes no network requests. The whole app runs in the browser; there is no server.
 
-Planned modules:
+### Modules
 
-| Module | Responsibility |
-|---|---|
-| Tree engine (`src/engine/`, TypeScript) | Insert, search, delete, min/max, traversals, height, successor, BST-rule check; produces animation steps |
-| Content | Lesson and test data (questions, hints, explanations) as JSON. Each question stores its task, and the engine works out the answer |
-| Visualiser | Tree rendering and the animation player (back, step, replay, speed) with text announcements |
-| Lessons and assessment | Stage screens, question types, hint ladder, pass rules, final test and results |
-| App shell (`src/app/`) | Routing between screens, the lesson overview, and the two calls screens make when a student finishes something |
-| Storage (`src/storage/`) | Saving progress, badges, settings and earlier attempts in the browser; progress codes for switching computers |
+| Module | Folder | Responsibility | Uses |
+|---|---|---|---|
+| Tree engine | `src/engine/` | Insert, search, delete, min/max, traversals, height, successor, BST-rule check; turns each operation into animation steps | Nothing |
+| Content | `src/content/` | Lessons, final test, trees and settings as JSON. Each question stores its task, and the engine works out the answer | Engine |
+| Assessment | `src/assessment/` | Hint ladder, scoring bands, unlocking and badges | Content, engine |
+| Visualiser | `src/visualiser/` | Tree drawing and the animation player (back, step, replay, speed) with screen-reader announcements and display settings | Engine |
+| Storage | `src/storage/` | Saving progress, badges, settings and earlier attempts in the browser; progress codes | Assessment |
+| App shell and screens | `src/app/` | Routing, the overview, the six-stage lesson screens, the question forms and the final test | All of the above |
 
-All pass thresholds, hint counts and key mappings live in one config file.
+Dependencies point one way, towards the engine, and each module is used only through its `index.ts`. All pass thresholds, hint counts and key mappings live in one config file (`src/content/data/config.json`). The [integration guide](docs/integration-guide.md) explains how the pieces fit together.
 
 ## Running locally
 
@@ -78,6 +87,7 @@ npm run answers     # rewrite docs/answer-sheet.md after changing a lesson file
 npm run dev         # run the app locally with live reload (http://localhost:5173)
 npm run build       # build the site for GitHub Pages into dist/
 npm run build:offline  # build the whole app as one index.html into dist-offline/ for the demo
+npm run preview     # serve the built site from dist/ to check it before publishing
 ```
 
 If npm fails with `Cannot read properties of null (reading 'edgesOut')`, that's a bug in npm. Use `npm ci`, or `npm install --legacy-peer-deps` if there's no lock file.
@@ -166,11 +176,11 @@ Every file is checked when it loads, and the content tests resolve every item on
 3. Commit the failing tests: `test(engine): add insert and build tests`.
 4. Write the code until the tests pass. Commit: `feat(engine): implement insert and build`.
 5. Tidy the code with the tests still passing. Commit: `refactor(engine): ...` if anything changed.
-6. Run `npm run check`, open a pull request and merge it.
+6. Run `npm run check` and open a pull request. Someone else reviews and merges it (see [Contributing](#contributing)).
 
 ## Assessment logic
 
-What the screens do with the content's questions and results: pure TypeScript with no screens, storage or network, built the same way as the engine (tests first). Screens import it from `src/assessment/index.ts`. Work happens on the `nevan/assessment` branch.
+What the screens do with the content's questions and results: pure TypeScript with no screens, storage or network, built the same way as the engine (tests first). Screens import it from `src/assessment/index.ts`.
 
 It builds on `src/content` rather than repeating it: answers are checked with `checkQuestion`, settings come from `CONFIG` (`data/config.json`), and the final test's results come from `finalResults`.
 
@@ -193,6 +203,26 @@ The answer tables in the lesson plans double as unit tests for the tree engine. 
 
 Assessment tests live in `tests/assessment/` and take their expected results from the lesson plan's pass rules.
 
+| Folder | Test files | Covers |
+|---|---|---|
+| `tests/engine/` | 17 | Every operation and animation-step builder, against the lesson plan's answer tables |
+| `tests/content/` | 10 | Every lesson and final-test item on every retake, and the answer sheet |
+| `tests/assessment/` | 3 | Hint ladder, scoring bands, unlocking and badges |
+| `tests/visualiser/` | 1 | Tree layout |
+| `tests/storage/` | 1 | Saving, reloading, damaged data, blocked storage and progress codes |
+| `tests/app/` | 2 | Routing and demo mode |
+
+In total, 795 tests in 34 files. CI runs them, the type check and both builds on every push and pull request. The screens are checked by hand: the offline build is clicked through in a browser with the network off, checking for errors, saved progress after a reload, and layout at phone width.
+
+## Contributing
+
+1. Branch from `main`: `yourname/feature`.
+2. Push and open a pull request into `main`. CI must pass.
+3. Someone other than the author reviews it and merges it with **Create a merge commit** (not squash), so everyone's commits stay in the history.
+4. Merging into `main` publishes the site to GitHub Pages.
+
+Don't push straight to `main`. On macOS, renaming a file by case only (`Vitest.config.ts` to `vitest.config.ts`) needs `git mv` through a temporary name. A personal access token needs the `workflow` scope to push changes under `.github/workflows/`.
+
 ## Documentation
 
 | Document | Purpose |
@@ -202,6 +232,8 @@ Assessment tests live in `tests/assessment/` and take their expected results fro
 | BST Lesson Plans V2 | Decisions, outcomes and full lesson plans; the storyboard for the coding team |
 | Wireframes V3 | Clickable prototype of every screen, with design notes |
 | [Integration guide](docs/integration-guide.md) | How screens plug into the app shell, saving progress, CI, GitHub Pages and the offline demo build |
+| [Lesson content guide](docs/lesson-content-guide.md) | How the lesson and final-test content files work, and what the screens can call |
+| [Visualiser guide](docs/visualiser-guide.md) | Drawing trees and playing animation steps from the engine |
 | [Answer sheet](docs/answer-sheet.md) | Every activity item's answers on every retake, generated from the lesson files |
 | [Project plan](https://docs.google.com/document/d/1-fj3un0OCV_rKYq1pjEL1eJnyLQb3BT87bS_KEk9sXQ/edit?usp=sharing) | Agenda, roles, document outlines and timeline |
 
@@ -232,9 +264,9 @@ Favourite Smartie colour: blue.
 | Role | Owner | Code | SE document section |
 |---|---|---|---|
 | **Engine and content** | Ethan Wilke | Tree engine module, lesson and test content as JSON, unit tests from the answer tables, key mapping for retakes | Testing, data model |
-| **Visualiser and accessibility** | Unathi Dlamini | Tree rendering, animation player (back, step, replay, speed), screen-reader announcements, keyboard support, settings | UI design, accessibility requirements |
-| **Lessons and assessment** | Nevan Rahman | The six stage screens, the four question types, hint ladder, pass rules, final test, results and summary | Functional requirements, user flows |
-| **Integration and repo** | Meinka Singh | Repo and CI, splitting the prototype into modules, progress saving, GitHub Pages hosting, an offline-capable demo build | Assembles the SE document: process, architecture, deployment, future work |
+| **Visualiser and accessibility** | Unathi Dlamini | Tree rendering, animation player (back, step, replay, speed), screen-reader announcements, keyboard support, settings; the lesson and final-test screens | UI design, accessibility requirements |
+| **Lessons and assessment** | Nevan Rahman | Hint ladder, scoring bands, unlocking and badges; the shared palette, fonts and final styling; demo mode | Requirements, assessment logic |
+| **Integration and repo** | Meinka Singh | Repo and CI, the app shell and routing, progress saving and progress codes, GitHub Pages hosting, the offline single-file build | Assembles the SE document: process, architecture, deployment, future work |
 
 ## Use of generative AI
 

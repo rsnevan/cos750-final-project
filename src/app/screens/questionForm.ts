@@ -1,7 +1,9 @@
 import { drawTree } from '../../visualiser';
 import { checkPart } from '../../content';
 import type { Part, PartResponse, Question } from '../../content';
-import type { Highlight, Slot } from '../../engine';
+import { createNode } from '../../engine';
+import type { Highlight, Slot, Tree } from '../../engine';
+import { answerText } from '../demo';
 import { el } from '../dom';
 
 interface PartState {
@@ -16,6 +18,8 @@ export interface QuestionForm {
 
 export interface QuestionFormOptions {
   readonly highlight?: Highlight;
+  // Demo mode: show each part's answer.
+  readonly showAnswers?: boolean;
 }
 
 function partName(part: Part, index: number): string {
@@ -26,6 +30,21 @@ function partName(part: Part, index: number): string {
     case 'order': return 'Put the cards in order';
     case 'place': return 'Place the keys';
   }
+}
+
+// The tree with `key` attached at an empty spot, without the BST rule: a
+// wrong placement is shown where the student put it.
+function attachAt(tree: Tree, slot: Slot, key: number): Tree {
+  if (tree === null) return slot.parent === null ? createNode(key) : null;
+  if (tree.key === slot.parent) {
+    if (slot.side === 'left' && tree.left === null) return createNode(tree.key, createNode(key), tree.right);
+    if (slot.side === 'right' && tree.right === null) return createNode(tree.key, tree.left, createNode(key));
+    return tree;
+  }
+  const left = attachAt(tree.left, slot, key);
+  if (left !== tree.left) return createNode(tree.key, left, tree.right);
+  const right = attachAt(tree.right, slot, key);
+  return right === tree.right ? tree : createNode(tree.key, tree.left, right);
 }
 
 function copyBase(question: Question, overlay?: Highlight): Highlight {
@@ -71,6 +90,7 @@ export function mountQuestionForm(
       if (state === undefined) throw new Error(`Question part ${index} is missing`);
       const field = el('fieldset', { class: 'question-part' });
       field.append(el('legend', {}, partName(part, index)));
+      if (options.showAnswers) field.append(el('p', { class: 'demo-answer' }, `Answer: ${answerText(part)}`));
 
       if (part.type === 'pick') {
         const group = `answer-${question.id}-${index}`;
@@ -122,8 +142,10 @@ export function mountQuestionForm(
               : 'All keys have an empty spot.'));
           const updateTree = () => {
             const highlight = copyBase(question, options.highlight);
-            const currentSlot = selection.at(-1);
-            drawTree(treeMount, question.tree, currentSlot === undefined ? highlight : { ...highlight, slot: currentSlot }, {
+            // Draw the tree as it grows, so each placed key opens new empty spots.
+            const grown = selection.reduce<Tree>((tree, slot, i) => attachAt(tree, slot, part.keys[i] as number), question.tree);
+            const lastKey = selection.length > 0 ? part.keys[selection.length - 1] : undefined;
+            drawTree(treeMount, grown, lastKey === undefined ? highlight : { ...highlight, found: lastKey }, {
               showSlots: true,
               onSlot: (slot) => {
                 if (selection.length >= part.keys.length) return;
@@ -234,8 +256,17 @@ export function mountQuestionForm(
       fields[index] = field;
     });
 
+    // Pick and order answers do not draw the tree, so show it above them.
+    const answerDrawsTree = question.parts.some((part) => part.type === 'click' || part.type === 'place');
+    const treeView: HTMLElement[] = [];
+    if (!answerDrawsTree) {
+      const mount = el('div', { class: 'question-tree flow-tree' });
+      drawTree(mount, question.tree, copyBase(question, options.highlight));
+      treeView.push(mount);
+    }
+
     submitButton = el('button', { type: 'submit', class: 'button button--primary' }, 'Check answer');
-    const form = el('form', { class: 'question-form' }, ...fields, submitButton);
+    const form = el('form', { class: 'question-form' }, ...treeView, ...fields, submitButton);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       refreshSubmit();

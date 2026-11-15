@@ -187,9 +187,11 @@
 }
 
 .question-tree .bst-visualiser__tree,
-.flow-tree .bst-visualiser__tree {
+.flow-tree .bst-visualiser__tree,
+.flow-player .bst-visualiser__tree {
+  /* Shrink to fit a narrow screen, but never stretch a small tree past its own size. */
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto;
 }

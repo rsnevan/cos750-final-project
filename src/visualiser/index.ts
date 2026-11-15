@@ -163,7 +163,7 @@ export function drawTree(
     }
     const slotLabel = active ? highlight.slotLabel : undefined;
     if (slotLabel !== undefined) {
-      addSvgText(group, slotLabel, slot.x + 14, slot.y + 4, 'bst-visualiser__slot-label');
+      addSvgText(group, slotLabel, slot.x + 16, slot.y + 4, 'bst-visualiser__slot-label bst-visualiser__side-label');
     }
     setActivatable(
       group,
@@ -259,7 +259,7 @@ export function drawTree(
     }
     const tag = highlight.tags?.[node.key];
     if (tag !== undefined) {
-      addSvgText(group, tag, node.x + NODE_RADIUS + 7, node.y + 4, 'bst-visualiser__tag');
+      addSvgText(group, tag, node.x + NODE_RADIUS + 6, node.y + 4, 'bst-visualiser__tag bst-visualiser__side-label');
     }
     if (highlight.offender === node.key) {
       addSvgText(group, 'x', node.x + NODE_RADIUS - 2, node.y - NODE_RADIUS + 6, 'bst-visualiser__offender-mark');
@@ -422,6 +422,9 @@ export function createPlayer(
     speedSelect.append(option);
   }
   speedLabel.append(speedSelect);
+  // A one-step animation has nothing to play.
+  replayButton.disabled = steps.length < 2;
+  pauseButton.disabled = steps.length < 2;
   controls.append(backButton, stepButton, replayButton, pauseButton, speedLabel);
 
   const settingsFieldset = document.createElement('fieldset');
@@ -534,7 +537,7 @@ export function createPlayer(
     }
     if (index >= steps.length - 1) {
       stopPlayback();
-      pauseButton.textContent = 'Replay';
+      pauseButton.textContent = 'Play';
       return;
     }
     index += 1;
@@ -614,6 +617,9 @@ export function createPlayer(
       pauseButton.textContent = 'Pause';
       if (narrationEndedWhilePaused) {
         narrationEndedWhilePaused = false;
+        // Clear the paused speech engine, or the next caption stays silent.
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
         advancePlayback(playbackToken);
       } else {
         window.speechSynthesis.resume();
@@ -636,16 +642,17 @@ export function createPlayer(
       return;
     }
     if (steps.length === 1) {
-      pauseButton.textContent = 'Replay';
       isPlaying = false;
+      pauseButton.textContent = 'Play';
       render();
       return;
     }
     render();
     timer = globalThis.setInterval(() => {
       if (index >= steps.length - 1) {
+        // Pressing Play again restarts the sequence from the first step.
         stopPlayback();
-        pauseButton.textContent = 'Replay';
+        pauseButton.textContent = 'Play';
         return;
       }
       index += 1;
