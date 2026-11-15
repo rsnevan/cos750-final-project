@@ -162,7 +162,7 @@ export function drawTree(
     }
     const slotLabel = active ? highlight.slotLabel : undefined;
     if (slotLabel !== undefined) {
-      addSvgText(group, slotLabel, slot.x + 14, slot.y + 4, 'bst-visualiser__slot-label');
+      addSvgText(group, slotLabel, slot.x + 16, slot.y + 4, 'bst-visualiser__slot-label bst-visualiser__side-label');
     }
     setActivatable(
       group,
@@ -258,7 +258,7 @@ export function drawTree(
     }
     const tag = highlight.tags?.[node.key];
     if (tag !== undefined) {
-      addSvgText(group, tag, node.x + NODE_RADIUS + 7, node.y + 4, 'bst-visualiser__tag');
+      addSvgText(group, tag, node.x + NODE_RADIUS + 6, node.y + 4, 'bst-visualiser__tag bst-visualiser__side-label');
     }
     if (highlight.offender === node.key) {
       addSvgText(group, 'x', node.x + NODE_RADIUS - 2, node.y - NODE_RADIUS + 6, 'bst-visualiser__offender-mark');
@@ -417,6 +417,9 @@ export function createPlayer(
     speedSelect.append(option);
   }
   speedLabel.append(speedSelect);
+  // A one-step animation has nothing to play.
+  replayButton.disabled = steps.length < 2;
+  pauseButton.disabled = steps.length < 2;
   controls.append(backButton, stepButton, replayButton, pauseButton, speedLabel);
 
   const settingsFieldset = document.createElement('fieldset');
@@ -563,15 +566,14 @@ export function createPlayer(
       index = 0;
       render();
     }
-    if (steps.length === 1) {
-      pauseButton.textContent = 'Replay';
-      return;
-    }
+    if (steps.length === 1) return;
     pauseButton.textContent = 'Pause';
     timer = globalThis.setInterval(() => {
       if (index >= steps.length - 1) {
+        // The Replay button sits beside this one, so it goes back to Play
+        // (which starts again from the first step) instead of a second Replay.
         stopPlayback();
-        pauseButton.textContent = 'Replay';
+        pauseButton.textContent = 'Play';
         return;
       }
       index += 1;

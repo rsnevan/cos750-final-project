@@ -4,12 +4,13 @@
 
 A prototype of a tutor-style, pre-lecture app for COS 212 (Data Structures and Algorithms) students. It teaches **Binary Search Trees (BSTs)** to students who have never seen them, so they arrive at the lecture with the basics in place. The app ends each lesson with a low-stakes assessment that adds scaffolding when a student is struggling.
 
-> **Status: complete prototype.** All five lessons and the final test work end to end, with saved progress. 792 automated tests pass on every pull request, and every merge into `main` is published automatically.
+> **Status: complete prototype.** All five lessons and the final test work end to end, with saved progress. 795 automated tests pass on every pull request, and every merge into `main` is published automatically.
 
 ## Try it
 
 - **Online:** https://rsnevan.github.io/cos750-final-project/
 - **Offline:** run `npm run build:offline` and open `dist-offline/index.html` in any browser by double-clicking it. It is the whole app in one file and needs no internet. Every CI run also attaches it as the `offline-demo` download.
+- **Demo mode:** add `?demo` to the address (online or offline) to unlock every lesson and the final test and show each question's answer. Demo progress is kept apart from real progress, disappears when the tab closes, and "Reset demo" in the header clears it.
 - **Switching computers:** progress is saved in the browser. Under "Switching computers?" on the overview, copy your progress code and paste it into the app on the other computer.
 
 Works in a current version of Chrome, Edge, Firefox or Safari on a laptop or desktop computer.
@@ -49,7 +50,7 @@ Every lesson follows the same six stages: **hook and recall → explore → expl
 **Scaffolding and assessment**
 
 - Hint ladder on every item: a nudge question, then a highlight on the tree, then the worked solution and a parallel item with new keys.
-- 80% or more passes the activity and unlocks the next lesson. 60 to 79% shows explanations, then retries only the missed items with new keys. Below 60% re-explains the lesson in a different form before a retry.
+- 80% or more passes the activity and unlocks the next lesson. 60 to 79% shows explanations, then retries only the missed items with new keys. Below 60% shows the lesson's Explain pages again on one review page, then retries the whole activity with new keys. (The full design also re-explains the lesson in a different form, such as narration; the prototype shows the review page.)
 - Retries are unlimited and no marks are shown. Retakes use new keys, made by adding a fixed offset to every key: this keeps the keys in order, so every answer stays valid, and keeps keys between 1 and 99.
 - The final test has no hints and no timer. Full explanations follow the last item, and results are reported per outcome ("Secure" or "Listen for this in the lecture").
 
@@ -209,9 +210,9 @@ Assessment tests live in `tests/assessment/` and take their expected results fro
 | `tests/assessment/` | 3 | Hint ladder, scoring bands, unlocking and badges |
 | `tests/visualiser/` | 1 | Tree layout |
 | `tests/storage/` | 1 | Saving, reloading, damaged data, blocked storage and progress codes |
-| `tests/app/` | 1 | Routing |
+| `tests/app/` | 2 | Routing and demo mode |
 
-In total, 792 tests in 33 files. CI runs them, the type check and both builds on every push and pull request. The screens are checked by hand: the offline build is clicked through in a browser with the network off, checking for errors, saved progress after a reload, and layout at phone width.
+In total, 795 tests in 34 files. CI runs them, the type check and both builds on every push and pull request. The screens are checked by hand: the offline build is clicked through in a browser with the network off, checking for errors, saved progress after a reload, and layout at phone width.
 
 ## Contributing
 
@@ -264,7 +265,7 @@ Favourite Smartie colour: blue.
 |---|---|---|---|
 | **Engine and content** | Ethan Wilke | Tree engine module, lesson and test content as JSON, unit tests from the answer tables, key mapping for retakes | Testing, data model |
 | **Visualiser and accessibility** | Unathi Dlamini | Tree rendering, animation player (back, step, replay, speed), screen-reader announcements, keyboard support, settings; the lesson and final-test screens | UI design, accessibility requirements |
-| **Lessons and assessment** | Nevan Rahman | Hint ladder, scoring bands, unlocking and badges; the shared palette, fonts and final styling | Functional requirements, user flows |
+| **Lessons and assessment** | Nevan Rahman | Hint ladder, scoring bands, unlocking and badges; the shared palette, fonts and final styling; demo mode | Requirements, assessment logic |
 | **Integration and repo** | Meinka Singh | Repo and CI, the app shell and routing, progress saving and progress codes, GitHub Pages hosting, the offline single-file build | Assembles the SE document: process, architecture, deployment, future work |
 
 ## Use of generative AI

@@ -13,6 +13,8 @@ export type Route =
 
 export interface AppContext {
   readonly store: ProgressStore;
+  // True when the app was opened with ?demo (see demo.ts).
+  readonly demo: boolean;
   navigate(route: Route): void;
 }
 

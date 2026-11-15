@@ -71,6 +71,9 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
   let questionIndex = 0;
   let questionState = new Map<string, ItemState>();
   let questionRows = new Map<string, ItemResult>();
+  // Questions whose worked solution was shown this round. Their parallel
+  // question is practice and does not count towards the pass mark (ID 9.4).
+  const solutionShown = new Set<string>();
   let baseRows: ItemResult[] = [];
   let activityPhase: 'running' | 'mid' | 'low' | 'done' = 'running';
   let activityOutcome: ActivityResult | undefined;
@@ -185,7 +188,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         el('h2', {}, activityPhase === 'mid' ? 'Review and retry' : 'Let’s go over the idea again'),
         el('p', {}, activityPhase === 'mid'
           ? 'You’re close. Review the explanations below, then retry only the missed items with new keys.'
-          : 'Take another look at these lesson ideas in a different form, then try the full activity again with new keys.'),
+          : 'Take another look at the lesson’s explanations below, then try the full activity again with new keys.'),
       );
       if (activityPhase === 'mid') {
         missed.forEach((row) => {
@@ -273,6 +276,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
     container.append(formMount);
     mountQuestionForm(formMount, question, onAnswer, {
       highlight: questionFeedback === 'highlight' ? hint?.highlight : undefined,
+      showAnswers: ctx.demo,
     });
   }
 
@@ -286,7 +290,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
       questionState.set(question.id, next);
       questionRows.set(question.id, {
         id: question.id,
-        scored: next.scored,
+        scored: next.scored && !solutionShown.has(question.id),
         ...(question.deleteCase === undefined ? {} : { deleteCase: question.deleteCase }),
       });
       questionFeedback = 'correct';
@@ -294,6 +298,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
       const next = recordAttempt(state, false);
       questionState.set(question.id, next);
       questionFeedback = feedbackFor(next);
+      if (questionFeedback === 'solution') solutionShown.add(question.id);
     }
     render();
   }
@@ -334,6 +339,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
     questions.forEach((question) => {
       questionState.delete(question.id);
       questionRows.delete(question.id);
+      solutionShown.delete(question.id);
     });
     questionIndex = 0;
     questionFeedback = 'none';
@@ -584,11 +590,11 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
     }
     if (total > 1) {
       const controls = el('div', { class: 'actions' });
-      if (index > 0) controls.append(actionButton('Previous explore', () => {
+      if (index > 0) controls.append(actionButton('Previous exploration', () => {
         exploreIndex = Math.max(0, exploreIndex - 1);
         render();
       }));
-      if (index + 1 < total) controls.append(actionButton('Next explore', () => {
+      if (index + 1 < total) controls.append(actionButton('Next exploration', () => {
         exploreIndex += 1;
         render();
       }));
@@ -691,7 +697,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         });
         undo.hidden = mode !== 'path';
       };
-      const pathDone = actionButton('I have followed the path', () => {
+      const pathDone = actionButton('Check path', () => {
         const expected = task.path;
         if (!sameSequence(selected, expected)) {
           status.textContent = 'Not quite. Use the BST rule to check each comparison, then undo or start again.';
@@ -765,6 +771,10 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
         },
       });
       const check = actionButton('Check traversal', () => {
+        if (selected.length === 0) {
+          status.textContent = 'Click the nodes in the order the traversal visits them, then check.';
+          return;
+        }
         const correct = sameSequence(selected, task.sequence);
         status.textContent = correct
           ? 'Correct traversal order.'
