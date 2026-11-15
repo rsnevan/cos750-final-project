@@ -26,7 +26,8 @@
   font-size: 1.2rem;
 }
 
-.bst-visualiser--readable-font {
+.bst-visualiser--readable-font,
+.bst-visualiser--readable-font .bst-visualiser__tree {
   font-family: Verdana, Arial, sans-serif;
   letter-spacing: 0.025em;
 }
