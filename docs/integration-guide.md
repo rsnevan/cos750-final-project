@@ -12,8 +12,9 @@ index.html
     ├── progressActions.ts   finishActivity() and finishFinalTest()
     └── screens/
         ├── overview.ts      lesson map, badges, Continue, progress codes
-        ├── lesson.ts        PLACEHOLDER: replaced by the six stage screens
-        └── final.ts         PLACEHOLDER: replaced by the final test screens
+        ├── lesson.ts        the six stages of a lesson and its end-of-lesson activity
+        ├── questionForm.ts  the question types used in activities and the final test
+        └── final.ts         the final test and its results
 
 src/engine       tree logic and animation steps   (Ethan)
 src/content      lesson and test data              (Ethan)
