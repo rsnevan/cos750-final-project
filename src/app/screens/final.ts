@@ -97,7 +97,7 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
       el('section', { class: 'flow-card' },
         el('h2', {}, 'Outcomes'),
         el('ul', {}, ...summary.outcomes.map((outcome) =>
-          el('li', {}, `${outcome.name}: ${outcome.secure ? 'secure' : 'not yet secure'}`)))),
+          el('li', {}, `${outcome.name}: ${outcome.secure ? 'secure' : 'listen for this in the lecture'}`)))),
       el('section', { class: 'flow-card' },
         el('h2', {}, 'For the lecture'),
         el('p', {}, summary.lectureQuestion)),
