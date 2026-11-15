@@ -273,6 +273,7 @@ export const lessonScreen: Screen<Extract<Route, { name: 'lesson' }>> = (root, r
     container.append(formMount);
     mountQuestionForm(formMount, question, onAnswer, {
       highlight: questionFeedback === 'highlight' ? hint?.highlight : undefined,
+      showAnswers: ctx.demo,
     });
   }
 

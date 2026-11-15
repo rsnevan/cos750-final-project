@@ -2,6 +2,7 @@ import { drawTree } from '../../visualiser';
 import { checkPart } from '../../content';
 import type { Part, PartResponse, Question } from '../../content';
 import type { Highlight, Slot } from '../../engine';
+import { answerText } from '../demo';
 import { el } from '../dom';
 
 interface PartState {
@@ -16,6 +17,8 @@ export interface QuestionForm {
 
 export interface QuestionFormOptions {
   readonly highlight?: Highlight;
+  // Demo mode: show each part's answer.
+  readonly showAnswers?: boolean;
 }
 
 function partName(part: Part, index: number): string {
@@ -71,6 +74,7 @@ export function mountQuestionForm(
       if (state === undefined) throw new Error(`Question part ${index} is missing`);
       const field = el('fieldset', { class: 'question-part' });
       field.append(el('legend', {}, partName(part, index)));
+      if (options.showAnswers) field.append(el('p', { class: 'demo-answer' }, `Answer: ${answerText(part)}`));
 
       if (part.type === 'pick') {
         const group = `answer-${question.id}-${index}`;

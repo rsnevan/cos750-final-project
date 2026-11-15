@@ -63,7 +63,7 @@ export const finalScreen: Screen<Extract<Route, { name: 'final' }>> = (root, _ro
       el('p', { class: 'flow-prompt' }, question.prompt),
       mount,
     );
-    mountQuestionForm(mount, question, (responses) => submit(question, responses));
+    mountQuestionForm(mount, question, (responses) => submit(question, responses), { showAnswers: ctx.demo });
     root.append(body);
   }
 

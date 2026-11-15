@@ -129,4 +129,16 @@ code, pre, kbd { font-family: var(--mono); }
 .dev { border-style: dashed; }
 .code { width: 100%; font-family: var(--mono); font-size: 0.85rem; display: block; margin: 4px 0 8px; border: 1px solid var(--line-ui); border-radius: var(--radius-sm); padding: 8px; }
 label { display: inline-block; margin-top: 8px; font-weight: 500; }
+/* Demo mode (?demo): a label and reset button in the header, answers on questions. */
+.demo-bar { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; }
+.demo-bar__label { padding: 2px 8px; border: 1.5px dashed var(--purple); border-radius: var(--radius-sm); font-weight: 600; }
+.demo-bar__reset {
+  font: inherit; min-height: 32px; padding: 4px 12px; cursor: pointer;
+  border: 1px solid var(--line-ui); border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
+}
+.demo-answer {
+  margin: 4px 0 8px; padding: 4px 10px; font-size: 0.875rem; font-family: var(--mono);
+  border: 1.5px dashed var(--purple); border-radius: var(--radius-sm);
+}
+
 .notice { padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--hint-line); background: var(--hint-bg); }
